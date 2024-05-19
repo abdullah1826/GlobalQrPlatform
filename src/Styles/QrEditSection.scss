@@ -1,0 +1,411 @@
+@import "mixin";
+@import "../Styles/colors.scss";
+.edit-main {
+  width: 65%;
+  height: 100%;
+  @include flex(row, center, center);
+
+  .edit-inner {
+    width: 95%;
+    height: 100%;
+    // border: 1px solid black;
+    .tabs {
+      width: 100%;
+      @include flex(row, space-around, center);
+      .single-tab {
+        width: 160px;
+        height: 55px;
+        border-radius: 18px;
+        // background-color: $primary;
+        cursor: pointer;
+        @include flex(row, center, center, 0.5);
+        p {
+          font-family: Inter;
+          font-size: 18px;
+          font-weight: 600;
+          //   line-height: 38.73px;
+          //   border: 1px solid black;
+          margin-left: 7px;
+          // color: white;
+        }
+      }
+    }
+    // -----------------content----------------
+    .content-main {
+      width: 100%;
+      height: 85%;
+      // border: 1px solid black;
+
+      .content-inner {
+        width: 100%;
+        position: relative;
+        height: 100%;
+        border: 1px solid transparent;
+
+        .input-container {
+          // border: 1px solid black;
+          margin-top: 50px;
+          height: 100px;
+          p {
+            font-family: Inter;
+            font-size: 20px;
+            font-weight: 500;
+            line-height: 38.73px;
+            // text-align: left;
+            color: #838383;
+          }
+          input {
+            height: 50px;
+            @include inputStyle(70%, 1rem, #f1f1f1, none);
+            border-radius: 18px;
+            border: 1px solid #cacaca;
+          }
+        }
+
+        .toggle-section {
+          height: 55px;
+          width: 35%;
+          background-color: #f3f3f3;
+          border-radius: 18px;
+          @include flex(row, center, center, 0.5);
+          cursor: pointer;
+          p {
+            font-family: Inter;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 38.73px;
+            color: #5c5c5c;
+          }
+        }
+
+        .content-btn-container {
+          width: 97%;
+          display: flex;
+          justify-content: flex-end;
+          position: absolute;
+          bottom: 0px;
+          button {
+            @include btn(52px, 140px, $primary, white, 18px);
+            font-size: large;
+          }
+        }
+      }
+    }
+
+    // -----------------set color----------------
+    .color-main {
+      width: 100%;
+      height: 85%;
+      overflow-y: scroll;
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+      // border: 1px solid black;
+
+      .color-inner {
+        width: 100%;
+        position: relative;
+        height: 100%;
+        border: 1px solid transparent;
+        .color-wraper {
+          width: 100%;
+          @include flex(row, flex-start, center, 6rem);
+          // border: 1px solid black;
+          .foreground-color {
+            width: 30%;
+            margin-top: 20px;
+            // border: 1px solid black;
+            h2 {
+              font-family: Inter;
+              font-size: 22px;
+              font-weight: 600;
+              line-height: 38.73px;
+              color: $primary;
+            }
+            .radio-section {
+              width: 65%;
+              @include flex(row, space-around, center, 0);
+              .single-radio {
+                @include flex(row, center, center, 0.5);
+                p {
+                  font-family: Inter;
+                  font-size: 14px;
+                  font-weight: 500;
+                  line-height: 24.2px;
+                  text-align: left;
+                  color: $primary;
+                }
+              }
+            }
+
+            .color-options {
+              width: 100%;
+              @include flex(row, space-between, center, 0);
+              margin-top: 20px;
+              .single-color {
+                width: 100%;
+                height: 60px;
+                border: 1px solid black;
+                border-radius: 18px;
+                @include flex(row, space-between, center, 0);
+                background-color: #f1f1f1;
+                border: 1px solid #cacaca;
+                .color {
+                  height: 100%;
+                  width: 30%;
+
+                  @include flex(row, center, center, 0);
+                  input {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    width: 65px;
+                    height: 62px;
+                    background-color: transparent;
+                    border: none;
+                    cursor: pointer;
+                  }
+                  .exchanger {
+                    width: 60px;
+                    height: 50px;
+                    background-color: white;
+                    color: $primary;
+                    border: none;
+                    cursor: pointer;
+                    @include flex(row, center, center, 0rem);
+                    border-radius: 15px;
+                  }
+                  input::-webkit-color-swatch {
+                    border-radius: 15px;
+                    border: none;
+                  }
+                }
+                .color-value {
+                  height: 100%;
+                  width: 70%;
+                  @include flex(row, center, center, 0);
+                  font-family: Inter;
+                  font-size: 18px;
+                  font-weight: 500;
+                  // line-height: 29.05px;
+                  color: #807c7b;
+                }
+              }
+            }
+          }
+        }
+        .color-btn-container {
+          width: 97%;
+          display: flex;
+          justify-content: flex-end;
+          position: absolute;
+          bottom: 10px;
+          .button1 {
+            @include btn(52px, 140px, #e4e4e4, #959494, 18px);
+            font-size: large;
+            margin-right: 20px;
+          }
+
+          .button2 {
+            @include btn(52px, 140px, $primary, white, 18px);
+            font-size: large;
+          }
+        }
+      }
+    }
+
+    .color-main::-webkit-scrollbar {
+      display: none;
+    }
+
+    // -----------------set logo----------------------------
+    .logo-main {
+      width: 100%;
+      height: 85%;
+      overflow-y: scroll;
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+      // border: 1px solid black;
+
+      .logo-inner {
+        width: 100%;
+        position: relative;
+        height: 100%;
+        border: 1px solid transparent;
+        .text-section {
+          width: 100%;
+          margin-top: 15px;
+          h2 {
+            font-family: Inter;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 38.73px;
+
+            color: $primary;
+          }
+          p {
+            width: 85%;
+            font-family: Inter;
+            font-size: 16px;
+            font-weight: 400;
+            line-height: 24.2px;
+            color: #6d6d6d;
+          }
+        }
+        .logo-section {
+          width: 100%;
+          height: 55%;
+          margin-top: 20px;
+          @include flex(row, space-between, center, 0);
+          .upload-section {
+            width: 40%;
+            height: 100%;
+            border: 1px dashed $primary;
+            border-radius: 22px;
+            @include flex(column, center, center);
+
+            img {
+              width: 99px;
+              height: 66px;
+              // border: 1px solid black;
+            }
+            h2 {
+              font-family: Inter;
+              font-size: 18px;
+              font-weight: 500;
+              color: $primary;
+              // margin-top: 5px;
+              // line-height: 27.6px;
+            }
+            p {
+              font-family: Inter;
+              font-size: 14px;
+              font-weight: 400;
+              color: $primary;
+            }
+            .upload-btn {
+              width: 150px;
+              height: 43px;
+              border-radius: 23px;
+              background-color: $primary;
+              @include flex(row, center, center, 0.2rem);
+              color: white;
+              font-family: Inter;
+              cursor: pointer;
+            }
+          }
+          .chose-logo-section {
+            width: 50%;
+            height: 100%;
+            // border: 1px solid black;
+            padding: 4px;
+            @include flex(row, space-around, null, 0.5rem);
+
+            flex-wrap: wrap;
+            overflow-y: scroll;
+            .single-logo {
+              height: 70px;
+              width: 22%;
+              cursor: pointer;
+              // border: 1px solid black;
+              box-shadow: 0px 0px 4.800000190734863px 0px #00000040;
+              @include flex(row, center, center, 0rem);
+              img {
+                height: 50px;
+                width: 50px;
+              }
+
+              border-radius: 14px;
+            }
+          }
+          .chose-logo-section::-webkit-scrollbar {
+            display: none;
+          }
+        }
+
+        .logo-btn-container {
+          width: 97%;
+          display: flex;
+          justify-content: flex-end;
+          margin-top: 15px;
+          .button1 {
+            @include btn(52px, 140px, #e4e4e4, #959494, 18px);
+            font-size: large;
+            margin-right: 20px;
+          }
+
+          .button2 {
+            @include btn(52px, 140px, $primary, white, 18px);
+            font-size: large;
+          }
+        }
+      }
+    }
+
+    .logo-main::-webkit-scrollbar {
+      display: none;
+    }
+
+    // -----------------Qr customize----------------------------
+    .customize-main {
+      width: 100%;
+      height: 85%;
+      overflow-y: scroll;
+      -ms-overflow-style: none; /* IE and Edge */
+      scrollbar-width: none; /* Firefox */
+      // border: 1px solid black;
+
+      .customize-inner {
+        width: 100%;
+        position: relative;
+        height: 100%;
+        border: 1px solid transparent;
+        .option {
+          width: 100%;
+          margin-top: 30px;
+          h2 {
+            font-family: Inter;
+            font-size: 20px;
+            font-weight: 600;
+            color: $primary;
+          }
+          .all-options {
+            width: 100%;
+            @include flex(row, flex-start, null, 1.5rem);
+            flex-wrap: wrap;
+            margin-top: 10px;
+            .single-option {
+              height: 80px;
+              width: 80px;
+              cursor: pointer;
+              // border: 1px solid black;
+              box-shadow: 0px 0px 4.800000190734863px 0px #00000040;
+              @include flex(row, center, center, 0rem);
+              img {
+                height: 50px;
+                width: 50px;
+              }
+
+              border-radius: 14px;
+            }
+          }
+        }
+
+        .custom-btn-container {
+          width: 97%;
+          display: flex;
+          justify-content: flex-end;
+          .button1 {
+            @include btn(52px, 140px, #e4e4e4, #959494, 18px);
+            font-size: large;
+            margin-right: 20px;
+          }
+
+          .button2 {
+            @include btn(52px, 140px, $primary, white, 18px);
+            font-size: large;
+          }
+        }
+      }
+    }
+  }
+}

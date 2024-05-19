@@ -1,0 +1,27 @@
+@import "mixin";
+.home-main {
+  width: 100%;
+  height: 100vh;
+  @include flex(row, center, end);
+  .home-inner {
+    width: 94%;
+    height: 96%;
+    // border: 1px solid black;
+    @include flex(column, space-between, center);
+    .logo-container {
+      height: 12%;
+      width: 100%;
+      //   border: 1px solid black;
+      img {
+        width: 200px;
+        height: 100%;
+      }
+    }
+    .main-container {
+      height: 85%;
+      width: 100%;
+      // border: 1px solid black;
+      @include flex(row, space-between, center);
+    }
+  }
+}
