@@ -1,8 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import React, {
-  ReactNode,
-  //  Suspense, lazy
-} from "react";
+// import React, {
+// ReactNode,
+//  Suspense, lazy
+// } from "react";
 import "./App.css";
 import Home from "./Pages/Home";
 // import Analytics from "./Pages/Analytics";
@@ -18,14 +18,14 @@ import Home from "./Pages/Home";
 // let Create = lazy(() => import("./Pages/Create"));
 // let Login = lazy(() => import("./Pages/Login"));
 // let Signup = lazy(() => import("./Pages/Signup"));
-interface RequireAuthProps {
-  children: ReactNode;
-}
+// interface RequireAuthProps {
+//   children: ReactNode;
+// }
 function App() {
-  let theToken = localStorage.getItem("gbQrId");
-  const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
-    return theToken ? children : <Navigate to="/" />;
-  };
+  // let theToken = localStorage.getItem("gbQrId");
+  // const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
+  //   return theToken ? children : <Navigate to="/" />;
+  // };
   return (
     <>
       {" "}
