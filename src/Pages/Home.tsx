@@ -3,6 +3,7 @@ import "../Styles/home.scss";
 import logo from "../imgs/logo.png";
 import QrContainerSection from "../components/QrContainerSection";
 import QrEditSection from "../components/QrEditSection";
+
 const Home = () => {
   let [qrInfo, setQrInfo] = useState<{
     value: string;
@@ -51,6 +52,7 @@ const Home = () => {
     setQrInfo({ ...qrInfo, [key]: infoValue });
   };
   console.log(qrInfo.fShape);
+
   return (
     <div className="home-main">
       <div className="home-inner">

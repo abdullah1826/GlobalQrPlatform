@@ -5,9 +5,9 @@ import { IoIosColorPalette } from "react-icons/io";
 import { FaImages } from "react-icons/fa";
 import { IoQrCodeOutline } from "react-icons/io5";
 import Content from "./EditContainerComponents/Content";
-import SetColor from "./EditContainerComponents/SetColor";
 import SetLogo from "./EditContainerComponents/setLogo";
 import QrCustomize from "./EditContainerComponents/QrCustomize";
+import SetColor from "./EditContainerComponents/SetColor";
 
 interface SetProps {
   editQrInfo: (infoValue: string | number[], key: string) => void;
