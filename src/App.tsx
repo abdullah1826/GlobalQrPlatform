@@ -33,7 +33,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/dashboard">
+          {/* <Route path="/dashboard">
             <Route
               path=""
               element={
@@ -78,7 +78,7 @@ function App() {
             </Route>
             <Route path="signin" element={<Login />} />
             <Route path="signup" element={<Signup />} />
-          </Route>
+          </Route> */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
       </BrowserRouter>
