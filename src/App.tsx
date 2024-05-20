@@ -5,11 +5,11 @@ import React, {
 } from "react";
 import "./App.css";
 import Home from "./Pages/Home";
-import Analytics from "./Pages/Analytics";
-import Create from "./Pages/Create";
-import Login from "./Pages/Login";
-import Signup from "./Pages/Signup";
-import History from "./Pages/History";
+// import Analytics from "./Pages/Analytics";
+// import Create from "./Pages/Create";
+// import Login from "./Pages/Login";
+// import Signup from "./Pages/Signup";
+// import History from "./Pages/History";
 // import Loading from "./components/Loading";
 
 // let Home = lazy(() => import("./Pages/Home"));
