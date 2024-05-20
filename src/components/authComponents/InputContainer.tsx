@@ -6,6 +6,7 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { Checkbox } from "@mui/material";
 
 interface SetProps {
   isLogin: boolean;
@@ -114,6 +115,16 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
               value={data?.password}
             />
           </div>
+
+          {!isLogin && (
+            <div className="w-[100%] flex items-center ">
+              <Checkbox defaultChecked color="warning" />
+              <p className="text-xs text-[#848484]">
+                I agree with Terms of Service , Privacy Policy, Acceptable Use
+                Policy and Data Processing Agreement{" "}
+              </p>
+            </div>
+          )}
         </div>
 
         <div
@@ -123,7 +134,7 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
           {isLogin ? "Sign in" : "Sign up"}
         </div>
 
-        <div className="w-[100%] h-[57px] bg-[white] rounded-[18px]  flex justify-center items-center text-[#00000080] font-[600] text-[21px] shadow-md border gap-2 cursor-pointer">
+        <div className="w-[100%] h-[57px] bg-[white] rounded-[18px]  flex justify-center items-center text-[#00000080] font-[600] text-[21px] shadow-md border gap-2 cursor-pointer mt-3">
           <img src={google} alt="" className="h-[30px] w-[30px]" />
           <p>Continue With Google</p>
         </div>
@@ -133,7 +144,9 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
         <span
           className="text-[#FE5B24] ml-1 cursor-pointer"
           onClick={() =>
-            isLogin === true ? navigate("/signup") : navigate("/signin")
+            isLogin === true
+              ? navigate("/dashboard/signup")
+              : navigate("/dashboard/signin")
           }
         >
           {isLogin ? "Sign up" : "Sign in"}

@@ -21,7 +21,8 @@ const ImageContainer: React.FC<SetProps> = ({ isLogin }) => {
               Global QR Codes
             </h2>
             <p className="font-[400] text-[20px] text-white text-center w-[82%]">
-              Browse a variety of QR Code types to enrich print & digital media.
+              Create, manage, and track all your QR Codes for both print and
+              digital media.
             </p>
           </div>
 
