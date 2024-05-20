@@ -31,10 +31,10 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
         password: data?.password,
       })
       .then((res) => {
-        console.log("the response", res);
+        console.log("the response", res.data);
         if (res?.data?.data?.status === true) {
-          toast.success(res?.data?.status?.msg);
           navigate("/dashboard/signin");
+          toast.success(res?.data?.status?.msg);
         }
       })
       .catch((err) => {
