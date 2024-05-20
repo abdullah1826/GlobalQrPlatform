@@ -58,8 +58,10 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
           localStorage.setItem("gbEmail", data?.email);
           try {
             await Promise.resolve(securePromise);
-            toast.success("Login Successfuly");
+
             navigate("/dashboard");
+            window.location.reload();
+            toast.success("Login Successfuly");
           } catch (error) {
             console.error("Error updating objects:", error);
           }
