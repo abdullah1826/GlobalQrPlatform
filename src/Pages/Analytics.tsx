@@ -64,13 +64,17 @@ const Analytics = () => {
 
   // ---------------------------------------------get api call-------------------------------------
 
-  const getAnalyticsData = async () => {
+  const getAnalyticsData = async (id: string | null) => {
     try {
-      const response = await axios.get(`${baseUrl}/analytics/get`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.post(
+        `${baseUrl}/analytics/get`,
+        { qrId: id },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setAnalytics(response.data?.data);
       console.log(response.data);
     } catch (error) {
@@ -119,9 +123,15 @@ const Analytics = () => {
   };
 
   useEffect(() => {
-    getAnalyticsData();
     getAllQrs();
-  }, []);
+
+    if (analyticstype === "All") {
+      getAnalyticsData(null);
+    } else {
+      console.log("id");
+      getAnalyticsData(analyticstype);
+    }
+  }, [analyticstype]);
 
   console.log(scanAnalytics);
 

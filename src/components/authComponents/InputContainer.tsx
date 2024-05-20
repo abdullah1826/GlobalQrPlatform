@@ -7,6 +7,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Checkbox } from "@mui/material";
+import { ClipLoader } from "react-spinners";
 
 interface SetProps {
   isLogin: boolean;
@@ -21,10 +22,13 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
   const getInput = (key: string, value: string) => {
     setdata({ ...data, [key]: value });
   };
+
+  const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   let baseUrl = import.meta.env.VITE_BASE_URL;
 
   const signUp = () => {
+    setLoading(true);
     axios
       .post(`${baseUrl}/auth/register`, {
         email: data?.email,
@@ -33,16 +37,21 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
       .then((res) => {
         console.log("the response", res.data);
         if (res?.data?.status === true) {
+          setLoading(false);
           navigate("/dashboard/signin");
           // toast.success(res?.data?.status?.msg);
+        } else {
+          setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
+        setLoading(true);
       });
   };
 
   const signIn = async () => {
+    setLoading(true);
     axios
       .post(`${baseUrl}/auth/login`, {
         email: data?.email,
@@ -51,6 +60,7 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
       .then(async (res) => {
         console.log("the response", res);
         if (res?.data?.status === true) {
+          setLoading(false);
           const securePromise = localStorage.setItem(
             "gbQrId",
             res?.data?.token
@@ -65,6 +75,8 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
           } catch (error) {
             console.error("Error updating objects:", error);
           }
+        } else {
+          setLoading(false);
         }
       })
       .catch((err) => {
@@ -132,7 +144,21 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
           className="w-[100%] h-[57px] bg-[#FE5B24] rounded-[18px] mt-2 flex justify-center items-center text-white font-[600] text-[21px] cursor-pointer"
           onClick={() => handleFunction()}
         >
-          {isLogin ? "Sign in" : "Sign up"}
+          {!loading ? (
+            isLogin ? (
+              "Sign in"
+            ) : (
+              "Sign up"
+            )
+          ) : (
+            <ClipLoader
+              color="white"
+              loading={true}
+              size={45}
+              aria-label="Loading Spinner"
+              data-testid="loader"
+            />
+          )}
         </div>
 
         <div className="w-[100%] h-[57px] bg-[white] rounded-[18px]  flex justify-center items-center text-[#00000080] font-[600] text-[21px] shadow-md border gap-2 cursor-pointer mt-3">
