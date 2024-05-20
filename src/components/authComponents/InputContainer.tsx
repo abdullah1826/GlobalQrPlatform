@@ -32,15 +32,14 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
       })
       .then((res) => {
         console.log("the response", res.data);
-        if (res?.data?.data?.status === true) {
+        if (res?.data?.status === true) {
           navigate("/dashboard/signin");
-          toast.success(res?.data?.status?.msg);
+          // toast.success(res?.data?.status?.msg);
         }
       })
       .catch((err) => {
         console.log(err);
       });
-    console.log("api end working......");
   };
 
   const signIn = async () => {
