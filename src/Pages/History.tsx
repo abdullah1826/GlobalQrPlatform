@@ -16,6 +16,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import DetailsModal from "../components/Modals/DetailsModal";
 
 interface qrType {
   name: string;
@@ -36,6 +37,21 @@ const History = () => {
   const navigate = useNavigate();
 
   const [qrs, setQrs] = useState<qrType[]>([]);
+  const [singleQr, setsingleQr] = useState<qrType>({
+    name: "",
+    url: "",
+    forColor: "",
+    bgColor: "",
+    eyeColor: "",
+    logo: "",
+    bodyShape: "squares",
+    eyeShape: "",
+    frameShape: "",
+    status: true,
+    totalScans: "",
+    userId: "",
+    _id: "",
+  });
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -220,9 +236,18 @@ const History = () => {
 
   console.log(qrs);
 
+  const [detailModal, setDetailModal] = useState<boolean>(false);
+  const handlecloseAction = () => {
+    setDetailModal(!detailModal);
+  };
   return (
     <div className="w-[100%] h-[100vh] flex justify-between z-10">
       <Sidebar />
+      <DetailsModal
+        detailModal={detailModal}
+        handlecloseAction={handlecloseAction}
+        singleQr={singleQr}
+      />
       <div className="h-[100%] w-[78%] flex justify-center items-center">
         <div className="h-[95%] w-[95%] flex flex-col justify-between z-10">
           <div className="w-[100%] flex justify-between items-center h-[11%]">
@@ -344,7 +369,12 @@ const History = () => {
                     <h2 className="font-[700] text-[48px] w-[110px]">
                       {qr?.totalScans}
                     </h2>
-                    <div className="flex items-center cursor-pointer">
+                    <div
+                      className="flex items-center cursor-pointer"
+                      onClick={() => {
+                        handlecloseAction(), setsingleQr(qr);
+                      }}
+                    >
                       <p className="text-[#FE5B24] font-[400] text-[16px] ">
                         Details
                       </p>
@@ -352,11 +382,11 @@ const History = () => {
                     </div>
                   </div>
 
-                  <div
-                    className="w-[210px] h-[61px] rounded-[12px] flex bg-[#FE5B24]"
-                    onClick={() => downloadQRCode(format, 200, 200, qr?._id)}
-                  >
-                    <div className="h-[100%] w-[75%] border-r flex justify-center items-center gap-2 cursor-pointer text-[#FFFFFF] font-[500] text-[14px]">
+                  <div className="w-[210px] h-[61px] rounded-[12px] flex bg-[#FE5B24]">
+                    <div
+                      className="h-[100%] w-[75%] border-r flex justify-center items-center gap-2 cursor-pointer text-[#FFFFFF] font-[500] text-[14px]"
+                      onClick={() => downloadQRCode(format, 200, 200, qr?._id)}
+                    >
                       <FiDownload className="text-xl" />
                       Download {format}{" "}
                     </div>
