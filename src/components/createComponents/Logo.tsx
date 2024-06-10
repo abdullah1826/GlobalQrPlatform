@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { iconsData } from "../../assets/returnSocialIcons";
 import upload from "../../imgs/upload.png";
 import { IoIosAddCircle } from "react-icons/io";
@@ -18,7 +18,7 @@ interface SetLogoProps {
     forColor2: string;
     iColor2: string;
     bgColor: string;
-    logo: string | undefined;
+    logo: string | Blob;
     bShape: "squares" | "dots" | undefined;
     iShape: [number, number, number, number];
     fShape: [number, number, number, number];
@@ -28,7 +28,7 @@ interface SetLogoProps {
 const Logo: React.FC<SetLogoProps> = ({ editQrInfo, qrInfo, handleRoute }) => {
   console.log(qrInfo);
 
-  let [prflimg, setprflimg] = useState<string | undefined>("");
+  let [prflimg, setprflimg] = useState<string>("");
   let [cropModal, setcropModal] = useState<boolean>(false);
   let [myprflimg, setmyprflimg] = useState<HTMLImageElement | null>(null);
   let [cropPrfl, setCropPrfl] = useState<Crop>({
@@ -51,7 +51,7 @@ const Logo: React.FC<SetLogoProps> = ({ editQrInfo, qrInfo, handleRoute }) => {
     if (files && files.length > 0) {
       const reader = new FileReader();
       const selectedFile = files[0];
-
+      console.log(selectedFile);
       reader.onload = () => {
         const base64String = reader.result as string;
         setprflimg(base64String);
@@ -69,6 +69,8 @@ const Logo: React.FC<SetLogoProps> = ({ editQrInfo, qrInfo, handleRoute }) => {
   let getCropedLogo = (val: string) => {
     editQrInfo(val, "logo");
   };
+
+  console.log(prflimg);
 
   return (
     <div className="w-[100%] h-[95%] flex flex-col items-center relative">

@@ -1,13 +1,13 @@
 import logo from "../imgs/logo.png";
 import { RiBarChartFill } from "react-icons/ri";
 import { RiFileHistoryFill } from "react-icons/ri";
-import imgPlchldr from "../imgs/imgPlchldr.jpg";
+// import imgPlchldr from "../imgs/imgPlchldr.jpg";
 import { IoIosLogOut } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 const Sidebar = () => {
   let path: string = window.location.pathname;
   console.log(path);
-  const userEmail = localStorage.getItem("gbEmail");
+  // const userEmail = localStorage.getItem("gbEmail");
   const navigate = useNavigate();
   const handleLogOut = async () => {
     const securePromise = localStorage.removeItem("gbQrId");
@@ -57,20 +57,20 @@ const Sidebar = () => {
       </div>
 
       <div className="w-[100%]  flex justify-center absolute z-10 bottom-5">
-        <div className="w-[75%] h-[155px] rounded-xl bg-[#EAEAEA] flex flex-col justify-center items-center gap-y-1">
-          <img
+        <div className="w-[75%] h-[155px] rounded-xl bg-transparent flex flex-col justify-end  gap-y-1">
+          {/* <img
             src={imgPlchldr}
             alt=""
             className="h-[55px] w-[55px] rounded-full shadow-md"
-          />
-          <h2 className="font-[500] text-[14px] text-[#FE5B24]">User</h2>
-          <p className="font-[400] text-[10px] text-[#777777]">{userEmail}</p>
+          /> */}
+          {/* <h2 className="font-[500] text-[14px] text-[#FE5B24]">User</h2>
+          <p className="font-[400] text-[10px] text-[#777777]">{userEmail}</p> */}
           <div
-            className="w-[105px] h-[28px] bg-[#FE5B24] rounded-[8px] flex justify-center items-center font-[600] text-[11px] text-white cursor-pointer"
+            className="w-[125px] h-[40px] bg-[#FE5B24] rounded-[8px] flex justify-center items-center font-[600] text-[11px] text-white cursor-pointer"
             onClick={() => handleLogOut()}
           >
-            <p>Logout</p>
-            <IoIosLogOut className="ml-1 text-[18px]" />
+            <p className="text-[16px]">Logout</p>
+            <IoIosLogOut className="ml-1 text-[20px]" />
           </div>
         </div>
       </div>

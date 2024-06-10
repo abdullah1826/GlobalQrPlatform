@@ -214,45 +214,49 @@ const Analytics = () => {
 
           <div className="w-[100%] h-[85%]  flex justify-between">
             <div className="w-[70%] h-[100%]  flex flex-col justify-between">
-              <div className="w-[100%] h-[30%] shadow-md border rounded-[14px] flex">
-                <div className="w-[25%] h-[100%] flex items-center border-r">
-                  <div className="w-[100%] h-[80%] flex flex-col items-center">
-                    <h2 className="font-[600] text-[16px] text-[#565656]">
-                      Total Qr Codes:
-                    </h2>
-                    <h2 className="text-[#FE5B24] font-[600] text-[64px] leading-[74px]">
-                      {/* {analytics?.totalQrs} */}
-                      {analytics?.activeQrs + analytics?.inactiveQrs}
-                    </h2>
-                  </div>
-                </div>
-                <div className="w-[75%] h-[100%] flex items-center justify-evenly">
-                  <div className="w-[45%] h-[90%] border rounded-[23px] shadow-md flex flex-col  items-center justify-center gap-2">
-                    <div className="h-[38px] w-[38px] rounded-full bg-[#DCFFD9] flex justify-center items-center ">
-                      <MdOutlineAutoGraph className="text-[#28DE18] text-xl" />
+              {analyticstype === "All" && (
+                <div className="w-[100%] h-[30%] shadow-md border rounded-[14px] flex ">
+                  <div className="w-[25%] h-[100%] flex items-center border-r">
+                    <div className="w-[100%] h-[80%] flex flex-col items-center">
+                      <h2 className="font-[600] text-[16px] text-[#565656]">
+                        Total Qr Codes:
+                      </h2>
+                      <h2 className="text-[#FE5B24] font-[600] text-[64px] leading-[74px]">
+                        {analytics?.activeQrs + analytics?.inactiveQrs}
+                      </h2>
                     </div>
-                    <h2 className="font-[600] text-[40px] text-[#28DE18]  leading-[30px]">
-                      {analytics?.activeQrs}
-                    </h2>
-                    <p className="font-[600] text-[12px] text-[#28DE18]">
-                      Active Qr Codes
-                    </p>
                   </div>
+                  <div className="w-[75%] h-[100%] flex items-center justify-evenly">
+                    <div className="w-[45%] h-[90%] border rounded-[23px] shadow-md flex flex-col  items-center justify-center gap-2">
+                      <div className="h-[38px] w-[38px] rounded-full bg-[#DCFFD9] flex justify-center items-center ">
+                        <MdOutlineAutoGraph className="text-[#28DE18] text-xl" />
+                      </div>
+                      <h2 className="font-[600] text-[40px] text-[#28DE18]  leading-[30px]">
+                        {analytics?.activeQrs}
+                      </h2>
+                      <p className="font-[600] text-[12px] text-[#28DE18]">
+                        Active Qr Codes
+                      </p>
+                    </div>
 
-                  <div className="w-[45%] h-[90%] border rounded-[23px] shadow-md flex flex-col  items-center justify-center gap-2">
-                    <div className="h-[38px] w-[38px] rounded-full bg-[#FFCECE] flex justify-center items-center ">
-                      <IoIosPause className="text-[#EE0000] text-xl" />
+                    <div className="w-[45%] h-[90%] border rounded-[23px] shadow-md flex flex-col  items-center justify-center gap-2">
+                      <div className="h-[38px] w-[38px] rounded-full bg-[#FFCECE] flex justify-center items-center ">
+                        <IoIosPause className="text-[#EE0000] text-xl" />
+                      </div>
+                      <h2 className="font-[600] text-[40px] text-[#EE0000]  leading-[30px]">
+                        {analytics?.inactiveQrs}
+                      </h2>
+                      <p className="font-[600] text-[12px] text-[#EE0000]">
+                        Paused Qr Codes
+                      </p>
                     </div>
-                    <h2 className="font-[600] text-[40px] text-[#EE0000]  leading-[30px]">
-                      {analytics?.inactiveQrs}
-                    </h2>
-                    <p className="font-[600] text-[12px] text-[#EE0000]">
-                      Paused Qr Codes
-                    </p>
                   </div>
                 </div>
-              </div>
-              <div className="w-[100%] h-[65%] border rounded-[14px] shadow-md flex flex-col items-center justify-center ">
+              )}
+              <div
+                className="w-[100%] border rounded-[14px] shadow-md flex flex-col items-center justify-center "
+                style={{ height: analyticstype === "All" ? "65%" : "100%" }}
+              >
                 <div className="w-[95%]  mt-4 flex justify-between items-center">
                   <p className="text-[#FE5B24] font-[500] text-[16px]">
                     QR Code Scans Over Time

@@ -60,7 +60,9 @@ const Cropper: React.FC<CropperProps> = ({
     );
 
     const base64Image = canvas.toDataURL("image/jpeg");
+    // const blob = await fetch(base64Image).then((res) => res.blob());
     setReduxState(base64Image);
+    // dataUrlToFile(base64Image, "global-qr-img");
     handleclosecropper();
   };
 

@@ -39,7 +39,7 @@ const DetailsModal: React.FC<ActionProps> = ({
   handlecloseAction,
   singleQr,
 }) => {
-  console.log(singleQr);
+  console.log(singleQr?.frameShape);
   const style2: React.CSSProperties = {
     position: "absolute",
     top: "50%",
@@ -124,6 +124,7 @@ const DetailsModal: React.FC<ActionProps> = ({
   const stringToArray = (
     stringValue: string
   ): [number, number, number, number] => {
+    console.log("example", stringValue);
     if (stringValue && stringValue != undefined) {
       const stringArray = stringValue.split(",");
       const numberArray = stringArray.map((str) => parseInt(str, 10)) as [
@@ -229,33 +230,35 @@ const DetailsModal: React.FC<ActionProps> = ({
           <div className="w-[100%] flex justify-center mt-3">
             <div className="w-[85%] flex justify-between ">
               <div className="w-[40%]">
-                <QRCode
-                  id={singleQr?._id}
-                  value={`${baseUrl}/qr/${singleQr?._id}`}
-                  fgColor={singleQr.forColor}
-                  bgColor={singleQr?.bgColor}
-                  eyeColor={singleQr?.eyeColor}
-                  qrStyle={singleQr?.bodyShape}
-                  logoImage={singleQr?.logo}
-                  eyeRadius={[
-                    {
-                      // top/left eye
-                      outer: stringToArray(singleQr?.frameShape),
-                      inner: stringToArray(singleQr?.eyeShape),
-                    },
-                    {
-                      // top/left eye
-                      outer: stringToArray(singleQr?.frameShape),
-                      inner: stringToArray(singleQr?.eyeShape),
-                    },
-                    {
-                      // top/left eye
-                      outer: stringToArray(singleQr?.frameShape),
-                      inner: stringToArray(singleQr?.eyeShape),
-                    },
-                  ]}
-                  size={160}
-                />
+                {singleQr?.frameShape && singleQr?.eyeShape && (
+                  <QRCode
+                    id={singleQr?._id}
+                    value={`${baseUrl}/qr/${singleQr?._id}`}
+                    fgColor={singleQr.forColor}
+                    bgColor={singleQr?.bgColor}
+                    eyeColor={singleQr?.eyeColor}
+                    qrStyle={singleQr?.bodyShape}
+                    logoImage={singleQr?.logo}
+                    eyeRadius={[
+                      {
+                        // top/left eye
+                        outer: stringToArray(singleQr?.frameShape),
+                        inner: stringToArray(singleQr?.eyeShape),
+                      },
+                      {
+                        // top/left eye
+                        outer: stringToArray(singleQr?.frameShape),
+                        inner: stringToArray(singleQr?.eyeShape),
+                      },
+                      {
+                        // top/left eye
+                        outer: stringToArray(singleQr?.frameShape),
+                        inner: stringToArray(singleQr?.eyeShape),
+                      },
+                    ]}
+                    size={160}
+                  />
+                )}
               </div>
               <div className="w-[55%]">
                 {singleQr?.status ? (
@@ -284,9 +287,9 @@ const DetailsModal: React.FC<ActionProps> = ({
                   <div className="flex">
                     <TbUnlink className="text-[20px] text-[#9F9F9F] " />
                     <p className="font-[500] text-[14px] text-[#9F9F9F] ml-1">
-                      {singleQr?.url?.length < 26
+                      {singleQr?.url?.length < 22
                         ? singleQr?.url
-                        : singleQr?.url.slice(0, 26) + "..."}
+                        : singleQr?.url.slice(0, 22) + "..."}
                     </p>
                   </div>
 

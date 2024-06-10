@@ -17,6 +17,7 @@ import { useEffect, useState } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import DetailsModal from "../components/Modals/DetailsModal";
+import { ClipLoader } from "react-spinners";
 
 interface qrType {
   name: string;
@@ -37,6 +38,8 @@ const History = () => {
   const navigate = useNavigate();
 
   const [qrs, setQrs] = useState<qrType[]>([]);
+  const [filter, setfilter] = useState<qrType[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [singleQr, setsingleQr] = useState<qrType>({
     name: "",
     url: "",
@@ -55,9 +58,14 @@ const History = () => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const [selectedQr, setSelectedQr] = useState<string | null | undefined>("");
 
-  const handleClickListItem = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClickListItem = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: string
+  ) => {
     setAnchorEl(event.currentTarget);
+    setSelectedQr(id);
   };
   const handleClose = () => {
     setAnchorEl(null);
@@ -78,6 +86,20 @@ const History = () => {
     setAnchorEl2(null);
   };
 
+  const [anchorEl3, setAnchorEl3] = useState<null | HTMLElement>(null);
+  const open3 = Boolean(anchorEl3);
+
+  const handleClickListItem3 = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl3(event.currentTarget);
+  };
+  const handleClose3 = () => {
+    setAnchorEl3(null);
+  };
+
+  const [filterType, setFilterType] = useState<"All" | "Paused" | "Active">(
+    "All"
+  );
+
   const token = localStorage.getItem("gbQrId");
   let baseUrl = import.meta.env.VITE_BASE_URL;
   const [format, setFormat] = useState<string>("png");
@@ -91,8 +113,9 @@ const History = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setQrs(response.data?.data);
 
+      setQrs(response.data?.data);
+      setfilter(response.data?.data);
       console.log(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -101,7 +124,7 @@ const History = () => {
 
   // ---------------------------------------------delete call-------------------------------------
 
-  const deleteQr = async (id: string) => {
+  const deleteQr = async (id: string | null | undefined) => {
     try {
       const response = await axios.post(
         `${baseUrl}/qr/delete`,
@@ -113,6 +136,7 @@ const History = () => {
         }
       );
       setQrs(response.data?.data);
+      setfilter(response.data?.data);
       console.log(response.data);
       handleClose();
     } catch (error) {
@@ -127,6 +151,8 @@ const History = () => {
     status: boolean
   ) => {
     try {
+      setSelectedQr(qrId);
+      setLoading(true);
       const response = await axios.post(
         `${baseUrl}/analytics/update`,
         { type, qrId, status },
@@ -137,9 +163,12 @@ const History = () => {
         }
       );
       setQrs(response?.data?.data);
+      setfilter(response.data?.data);
+      setLoading(false);
       // setStatValue("");
       console.log(response.data);
     } catch (error) {
+      setLoading(false);
       console.error("Error fetching data:", error);
     }
   };
@@ -216,6 +245,22 @@ const History = () => {
     getAnalyticsData();
   }, []);
 
+  useEffect(() => {
+    if (filterType === "All") {
+      getAnalyticsData();
+    } else if (filterType === "Active") {
+      const activeResult = qrs?.filter((elm) => {
+        return elm?.status === true;
+      });
+      setfilter(activeResult);
+    } else if (filterType === "Paused") {
+      const inactiveResult = qrs?.filter((elm) => {
+        return elm?.status === false;
+      });
+      setfilter(inactiveResult);
+    }
+  }, [filterType]);
+
   const stringToArray = (
     stringValue: string
   ): [number, number, number, number] => {
@@ -269,13 +314,56 @@ const History = () => {
                 </p>
               </div> */}
 
-              <div className="w-[130px] h-[53px] rounded-[12px] shadow-lg flex items-center justify-center gap-[5px] cursor-pointer">
+              <button
+                className="w-[130px] h-[53px] rounded-[12px] shadow-lg flex items-center justify-center gap-[5px] cursor-pointer"
+                id="filter-button"
+                aria-haspopup="listbox"
+                aria-controls="filter-menu"
+                // aria-expanded={openMenu ? "true" : undefined}
+                onClick={handleClickListItem3}
+              >
                 <CiFilter className="text-[#FE5B24] text-[20px]" />
                 <p className="font-[400] text-[16px] text-[#FE5B24] flex items-center">
-                  Activated
+                  {filterType}
                 </p>
                 <IoIosArrowDown className="text-[#FE5B24] text-[20px]" />
-              </div>
+              </button>
+
+              <Menu
+                id="filter-button"
+                anchorEl={anchorEl3}
+                open={open3}
+                onClose={handleClose3}
+                MenuListProps={{
+                  "aria-labelledby": "filter-button",
+                  role: "listbox",
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    setFilterType("All"), handleClose3();
+                  }}
+                  sx={{ display: "flex" }}
+                >
+                  All
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setFilterType("Active"), handleClose3();
+                  }}
+                  sx={{ display: "flex" }}
+                >
+                  Active
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    setFilterType("Paused"), handleClose3();
+                  }}
+                  sx={{ display: "flex" }}
+                >
+                  Paused
+                </MenuItem>
+              </Menu>
 
               <div
                 className="w-[185px] h-[53px] rounded-[12px] shadow-lg flex items-center justify-center gap-2 cursor-pointer"
@@ -290,7 +378,7 @@ const History = () => {
           </div>
 
           <div className="w-[100%] h-[85%] overflow-y-scroll">
-            {qrs?.map((qr, i) => {
+            {filter?.map((qr, i) => {
               return (
                 <div
                   className="w-[100%] h-[150px] border rounded-[19px] shadow-md flex justify-around items-center relative overflow-visible mt-7"
@@ -304,8 +392,20 @@ const History = () => {
                           updateAnalyticsStatus("status", qr?._id, !qr?.status)
                         }
                       >
-                        <MdOutlineAutoGraph className="text-xl text-[#28DE18]" />
-                        Active
+                        {loading && selectedQr === qr?._id ? (
+                          <ClipLoader
+                            color="#28DE18"
+                            loading={true}
+                            size={30}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                          />
+                        ) : (
+                          <>
+                            <MdOutlineAutoGraph className="text-xl text-[#28DE18]" />
+                            Active
+                          </>
+                        )}
                       </div>
                     ) : (
                       <div
@@ -314,8 +414,20 @@ const History = () => {
                           updateAnalyticsStatus("status", qr?._id, !qr?.status)
                         }
                       >
-                        <IoIosPause className="text-xl text-[#EE0000]" />
-                        Paused
+                        {loading && selectedQr === qr?._id ? (
+                          <ClipLoader
+                            color="#EE0000"
+                            loading={true}
+                            size={30}
+                            aria-label="Loading Spinner"
+                            data-testid="loader"
+                          />
+                        ) : (
+                          <>
+                            <IoIosPause className="text-xl text-[#EE0000]" />
+                            Paused
+                          </>
+                        )}
                       </div>
                     )}
                   </div>
@@ -440,38 +552,40 @@ const History = () => {
 
                   <div className="h-[100%] flex justify-center items-center">
                     <button
-                      id="lang-button"
+                      id={`${qr?._id}-button`}
                       aria-haspopup="listbox"
-                      aria-controls="lang-menu"
+                      aria-controls={qr?._id}
                       // aria-expanded={openMenu ? "true" : undefined}
-                      onClick={handleClickListItem}
+                      onClick={(e) => handleClickListItem(e, qr?._id)}
                       className="outline-none bg-transparent"
                     >
                       <BsThreeDotsVertical className="text-4xl cursor-pointer text-[#D9D9D9]" />
                     </button>
                   </div>
                   <Menu
-                    id="lang-menu"
+                    id={qr?._id}
                     anchorEl={anchorEl}
                     open={open}
                     onClose={handleClose}
                     MenuListProps={{
-                      "aria-labelledby": "lang-button",
+                      "aria-labelledby": `${qr?._id}-button`,
                       role: "listbox",
                     }}
                   >
-                    <MenuItem
+                    <div
                       onClick={() => {
-                        navigate(`/dashboard/create/${qr?._id}`);
+                        navigate(`/dashboard/create/${selectedQr}`);
                         // handleGetValue("weakly");
                       }}
-                      sx={{ display: "flex" }}
                     >
-                      <p className="font-[500] ml-2 text-base">Edit</p>
-                    </MenuItem>
+                      <MenuItem sx={{ display: "flex" }}>
+                        <p className="font-[500] ml-2 text-base">Edit</p>
+                      </MenuItem>
+                    </div>
+
                     <MenuItem
                       onClick={() => {
-                        deleteQr(qr?._id);
+                        deleteQr(selectedQr);
                       }}
                       sx={{ display: "flex" }}
                     >

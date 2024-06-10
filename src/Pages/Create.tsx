@@ -61,7 +61,7 @@ const Create = () => {
     iColor: string;
     iColor2: string;
     bgColor: string;
-    logo: string | undefined;
+    logo: string | Blob;
     bShape: "squares" | "dots" | undefined;
     iShape: [number, number, number, number];
     fShape: [number, number, number, number];
@@ -432,7 +432,9 @@ const Create = () => {
         handlecloseAction={handlecloseAction}
         actionModal={actionModal}
         actionString={actionString}
-        actionMethod={handlecloseAction}
+        actionMethod={() => {
+          handlecloseAction(), naviget("/dashboard");
+        }}
       />
       <div className="w-[100%] h-[88%] flex justify-center items-center ">
         <div className="w-[95%] h-[88%]  flex justify-between">
@@ -530,7 +532,9 @@ const Create = () => {
               bgColor={qrInfo?.bgColor}
               eyeColor={qrInfo?.iColor}
               qrStyle={qrInfo?.bShape}
-              logoImage={qrInfo?.logo}
+              logoImage={
+                typeof qrInfo?.logo === "string" ? qrInfo?.logo : undefined
+              }
               eyeRadius={[
                 {
                   // top/left eye
@@ -668,7 +672,10 @@ const Create = () => {
                 bgColor={qrInfo?.bgColor}
                 eyeColor={qrInfo?.iColor}
                 qrStyle={qrInfo?.bShape}
-                logoImage={qrInfo?.logo}
+                // logoImage={qrInfo?.logo}
+                logoImage={
+                  typeof qrInfo?.logo === "string" ? qrInfo?.logo : undefined
+                }
                 eyeRadius={[
                   {
                     // top/left eye

@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Checkbox } from "@mui/material";
 import { ClipLoader } from "react-spinners";
+import { PiEyeClosedThin } from "react-icons/pi";
+import { PiEyeThin } from "react-icons/pi";
 
 interface SetProps {
   isLogin: boolean;
@@ -18,6 +20,8 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
     email: "",
     password: "",
   });
+
+  const [showPass, setShowPass] = useState<boolean>(false);
 
   const getInput = (key: string, value: string) => {
     setdata({ ...data, [key]: value });
@@ -121,12 +125,27 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
 
           <div className="w-[100%] mt-3">
             <h2 className="font-[500] text-[#9FA598] text-[20px]">Password</h2>
-            <input
-              type="text"
-              className="w-[98%] pl-[2%] h-[55px] outline-none border border-[#D1D5DB] rounded-[18px]"
-              onChange={(e) => getInput("password", e.target.value)}
-              value={data?.password}
-            />
+
+            <div className="w-[98%] h-[55px]  border border-[#D1D5DB] rounded-[18px] flex justify-center items-center relative">
+              {showPass ? (
+                <PiEyeClosedThin
+                  className="absolute right-3 text-xl cursor-pointer"
+                  onClick={() => setShowPass(false)}
+                />
+              ) : (
+                <PiEyeThin
+                  className="absolute right-3 text-xl cursor-pointer"
+                  onClick={() => setShowPass(true)}
+                />
+              )}
+
+              <input
+                type={showPass ? "text" : "password"}
+                className="w-[99%] h-[98%] pl-[2%] outline-none rounded-[18px]"
+                onChange={(e) => getInput("password", e.target.value)}
+                value={data?.password}
+              />
+            </div>
           </div>
 
           {!isLogin && (

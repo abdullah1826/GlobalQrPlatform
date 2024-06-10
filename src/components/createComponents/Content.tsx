@@ -14,7 +14,7 @@ interface SetContentProps {
     forColor2: string;
     iColor2: string;
     bgColor: string;
-    logo: string | undefined;
+    logo: string | Blob;
     bShape: "squares" | "dots" | undefined;
     iShape: [number, number, number, number];
     fShape: [number, number, number, number];
