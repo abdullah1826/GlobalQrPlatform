@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { iconsData } from "../../assets/returnSocialIcons";
 import upload from "../../imgs/upload.png";
 import { IoIosAddCircle } from "react-icons/io";
