@@ -30,7 +30,7 @@ const Content: React.FC<SetContentProps> = ({
     <div className="w-[100%] h-[95%] flex flex-col justify-between items-center">
       <h2 className="font-[600] text-[40px] text-[#FE5B24]">Content</h2>
       <div className="w-[70%] flex flex-col items-center">
-        <h2 className="text-[#838383] font-[600] text-[20px]">Qr Name</h2>
+        <h2 className="text-[#838383] font-[600] text-[20px]">QR Name</h2>
         <input
           type="text"
           className="w-[97%] h-[58px] rounded-[32px] bg-[#F1F1F1] outline-none border-[#CACACA] border mt-1 pl-[3%]"

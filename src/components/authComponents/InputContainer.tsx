@@ -10,6 +10,7 @@ import { Checkbox } from "@mui/material";
 import { ClipLoader } from "react-spinners";
 import { PiEyeClosedThin } from "react-icons/pi";
 import { PiEyeThin } from "react-icons/pi";
+import { useGoogleLogin } from "@react-oauth/google";
 
 interface SetProps {
   isLogin: boolean;
@@ -97,6 +98,10 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
     }
   };
 
+  const login = useGoogleLogin({
+    onSuccess: (tokenResponse) => console.log(tokenResponse),
+  });
+
   return (
     <div className="h-[100%] w-[50%] border flex justify-center items-center relative">
       <div
@@ -180,7 +185,10 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
           )}
         </div>
 
-        <div className="w-[100%] h-[57px] bg-[white] rounded-[18px]  flex justify-center items-center text-[#00000080] font-[600] text-[21px] shadow-md border gap-2 cursor-pointer mt-3">
+        <div
+          className="w-[100%] h-[57px] bg-[white] rounded-[18px]  flex justify-center items-center text-[#00000080] font-[600] text-[21px] shadow-md border gap-2 cursor-pointer mt-3"
+          onClick={() => login()}
+        >
           <img src={google} alt="" className="h-[30px] w-[30px]" />
           <p>Continue With Google</p>
         </div>

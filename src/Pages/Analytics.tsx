@@ -219,7 +219,7 @@ const Analytics = () => {
                   <div className="w-[25%] h-[100%] flex items-center border-r">
                     <div className="w-[100%] h-[80%] flex flex-col items-center">
                       <h2 className="font-[600] text-[16px] text-[#565656]">
-                        Total Qr Codes:
+                        Total QR Codes:
                       </h2>
                       <h2 className="text-[#FE5B24] font-[600] text-[64px] leading-[74px]">
                         {analytics?.activeQrs + analytics?.inactiveQrs}
