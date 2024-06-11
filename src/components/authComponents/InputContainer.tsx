@@ -101,7 +101,7 @@ const InputContainer: React.FC<SetProps> = ({ isLogin }) => {
   const login = useGoogleLogin({
     onSuccess: (tokenResponse) => console.log(tokenResponse),
   });
-
+  console.log("testing");
   return (
     <div className="h-[100%] w-[50%] border flex justify-center items-center relative">
       <div
