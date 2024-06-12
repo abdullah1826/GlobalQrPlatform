@@ -16,6 +16,7 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
 import ActionModal from "../components/Modals/ActionModal";
+import toast, { Toaster } from "react-hot-toast";
 
 const Create = () => {
   const naviget = useNavigate();
@@ -389,8 +390,9 @@ const Create = () => {
           },
         });
         console.log(response);
-        setActionString(response?.data?.msg);
-        handlecloseAction();
+        toast.success(response?.data?.msg);
+        // setActionString(response?.data?.msg);
+        // handlecloseAction();
         setQrInfo({
           name: "",
           value: "",
@@ -406,8 +408,9 @@ const Create = () => {
         });
         handleRoute("content");
       } else {
-        setActionString("Url field or name should not be empty!");
-        handlecloseAction();
+        toast.error("Url field or name should not be empty!");
+        // setActionString("Url field or name should not be empty!");
+        // handlecloseAction();
       }
     } catch (error) {
       console.error("Error posting data:", error);
@@ -419,6 +422,7 @@ const Create = () => {
 
   return (
     <div className="h-[100vh] w-[100%]">
+      <Toaster />
       <div className="w-[100%] h-[12%] shadow-sm border-b flex items-center ">
         <div
           className="flex h-[50px] items-center gap-[6px] text-[24px] font-[600] ml-[35px] text-[#FE5B24] cursor-pointer"
