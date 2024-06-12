@@ -1,5 +1,4 @@
 import InputContainer from "../components/authComponents/InputContainer";
-import ImageContainer from "../components/authComponents/ImageContainer";
 
 const UpdatePassword = () => {
   return (
