@@ -136,7 +136,7 @@ const InputContainer: React.FC<SetProps> = ({
       setLoading(true);
       axios
         .post(`${baseUrl}/auth/resetPassword`, {
-          newPassword: data?.email,
+          newPassword: data?.password,
           id,
         })
         .then(async (res) => {
