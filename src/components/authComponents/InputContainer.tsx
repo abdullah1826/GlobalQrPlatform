@@ -142,8 +142,11 @@ const InputContainer: React.FC<SetProps> = ({
         .then(async (res) => {
           console.log("the response", res);
           if (res?.data?.status === true) {
+            setConfirmPass({ ...ConfirmPass, password: "" });
+            setdata({ ...data, password: "" });
             setLoading(false);
             toast.success(res?.data?.message);
+            navigate("/dashboard/signin");
           } else {
             setLoading(false);
           }
