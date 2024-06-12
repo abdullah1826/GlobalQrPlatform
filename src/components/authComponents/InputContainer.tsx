@@ -1,26 +1,40 @@
 import React from "react";
 import logo from "../../imgs/logo.png";
 import google from "../../imgs/Google.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Checkbox } from "@mui/material";
 import { ClipLoader } from "react-spinners";
 import { PiEyeClosedThin } from "react-icons/pi";
 import { PiEyeThin } from "react-icons/pi";
 import { useGoogleLogin } from "@react-oauth/google";
+import toast, { Toaster } from "react-hot-toast";
 // import { jwtDecode } from "jwt-decode";
 
 interface SetProps {
   isLogin: boolean;
   isForgot: boolean;
+  isUpdate: boolean;
 }
 
-const InputContainer: React.FC<SetProps> = ({ isLogin, isForgot }) => {
+const InputContainer: React.FC<SetProps> = ({
+  isLogin,
+  isForgot,
+  isUpdate,
+}) => {
+  const { id } = useParams();
   const [data, setdata] = useState<{ email: string; password: string }>({
     email: "",
+    password: "",
+  });
+
+  const [ConfirmPass, setConfirmPass] = useState<{
+    show: boolean;
+    password: string;
+  }>({
+    show: false,
     password: "",
   });
 
@@ -44,10 +58,12 @@ const InputContainer: React.FC<SetProps> = ({ isLogin, isForgot }) => {
       .then((res) => {
         console.log("the response", res.data);
         if (res?.data?.status === true) {
+          toast.success(res?.data?.msg);
           setLoading(false);
           navigate("/dashboard/signin");
           // toast.success(res?.data?.status?.msg);
         } else {
+          toast.error(res?.data?.msg);
           setLoading(false);
         }
       })
@@ -83,6 +99,7 @@ const InputContainer: React.FC<SetProps> = ({ isLogin, isForgot }) => {
             console.error("Error updating objects:", error);
           }
         } else {
+          toast.error(res?.data?.msg);
           setLoading(false);
         }
       })
@@ -92,9 +109,61 @@ const InputContainer: React.FC<SetProps> = ({ isLogin, isForgot }) => {
     console.log("api end working......");
   };
 
+  const forgetPassword = () => {
+    setLoading(true);
+    axios
+      .post(`${baseUrl}/auth/forgetPassword`, {
+        email: data?.email,
+      })
+      .then(async (res) => {
+        console.log("the response", res);
+        if (res?.data?.status === true) {
+          setLoading(false);
+          toast.success(res?.data?.message);
+        } else {
+          toast.error(res?.data?.message);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        setLoading(false);
+        console.log(err);
+      });
+  };
+
+  const resetPassword = () => {
+    if (data?.password === ConfirmPass?.password) {
+      setLoading(true);
+      axios
+        .post(`${baseUrl}/auth/resetPassword`, {
+          newPassword: data?.email,
+          id,
+        })
+        .then(async (res) => {
+          console.log("the response", res);
+          if (res?.data?.status === true) {
+            setLoading(false);
+            toast.success(res?.data?.message);
+          } else {
+            setLoading(false);
+          }
+        })
+        .catch((err) => {
+          setLoading(false);
+          console.log(err);
+        });
+    } else {
+      toast.error("The new password does not match the confirm password");
+    }
+  };
+
   const handleFunction = () => {
     if (isLogin) {
       return signIn();
+    } else if (isForgot) {
+      forgetPassword();
+    } else if (isUpdate) {
+      resetPassword();
     } else {
       return signUp();
     }
@@ -153,7 +222,8 @@ const InputContainer: React.FC<SetProps> = ({ isLogin, isForgot }) => {
   });
   console.log("testing");
   return (
-    <div className="h-[100%] w-[50%] border flex justify-center items-center relative">
+    <div className="h-[100%] w-[50%]  flex justify-center items-center relative">
+      <Toaster />
       <div
         className=" w-[400px]  flex flex-col  items-center mb-4 "
         style={{
@@ -164,33 +234,39 @@ const InputContainer: React.FC<SetProps> = ({ isLogin, isForgot }) => {
         <img src={logo} alt="" className="w-[200px] h-[90px] object-cover" />
         <div>
           <h2 className="font-[500] text-[32px] text-center">Welcome!</h2>
-          {!isForgot ? (
+          {isForgot ? (
+            <p className="font-[400] text-[18px] text-[#848484] text-center">
+              Please enter your email to reset password
+            </p>
+          ) : isUpdate ? (
+            <p className="font-[400] text-[18px] text-[#848484] text-center">
+              Please enter new password to update
+            </p>
+          ) : (
             <p className="font-[400] text-[18px] text-[#848484] text-center">
               {`Please enter your credentials to ${
                 isLogin ? "Sign in" : "Sign up"
               }!`}
             </p>
-          ) : (
-            <p className="font-[400] text-[18px] text-[#848484] text-center">
-              Please enter your email to reset password
-            </p>
           )}
         </div>
         <div className="w-[100%]">
-          <div className="w-[100%]">
-            <h2 className="font-[500] text-[#9FA598] text-[20px]">Email</h2>
-            <input
-              type="text"
-              className="w-[98%] pl-[2%] h-[55px] outline-none border border-[#D1D5DB] rounded-[18px]"
-              onChange={(e) => getInput("email", e.target.value)}
-              value={data?.email}
-            />
-          </div>
+          {!isUpdate && (
+            <div className="w-[100%]">
+              <h2 className="font-[500] text-[#9FA598] text-[20px]">Email</h2>
+              <input
+                type="text"
+                className="w-[98%] pl-[2%] h-[55px] outline-none border border-[#D1D5DB] rounded-[18px]"
+                onChange={(e) => getInput("email", e.target.value)}
+                value={data?.email}
+              />
+            </div>
+          )}
 
           {!isForgot && (
             <div className="w-[100%] mt-3">
               <h2 className="font-[500] text-[#9FA598] text-[20px]">
-                Password
+                {isUpdate && "New"} Password
               </h2>
 
               <div className="w-[98%] h-[55px]  border border-[#D1D5DB] rounded-[18px] flex justify-center items-center relative">
@@ -216,7 +292,42 @@ const InputContainer: React.FC<SetProps> = ({ isLogin, isForgot }) => {
             </div>
           )}
 
-          {!isLogin && !isForgot && (
+          {isUpdate && (
+            <div className="w-[100%] mt-3">
+              <h2 className="font-[500] text-[#9FA598] text-[20px]">
+                Confirm Password
+              </h2>
+
+              <div className="w-[98%] h-[55px]  border border-[#D1D5DB] rounded-[18px] flex justify-center items-center relative">
+                {ConfirmPass?.show ? (
+                  <PiEyeClosedThin
+                    className="absolute right-3 text-xl cursor-pointer"
+                    onClick={() =>
+                      setConfirmPass({ ...ConfirmPass, show: false })
+                    }
+                  />
+                ) : (
+                  <PiEyeThin
+                    className="absolute right-3 text-xl cursor-pointer"
+                    onClick={() =>
+                      setConfirmPass({ ...ConfirmPass, show: true })
+                    }
+                  />
+                )}
+
+                <input
+                  type={ConfirmPass?.show ? "text" : "password"}
+                  className="w-[99%] h-[98%] pl-[2%] outline-none rounded-[18px]"
+                  onChange={(e) =>
+                    setConfirmPass({ ...ConfirmPass, password: e.target.value })
+                  }
+                  value={ConfirmPass?.password}
+                />
+              </div>
+            </div>
+          )}
+
+          {!isLogin && !isForgot && !isUpdate && (
             <div className="w-[100%] flex items-center ">
               <Checkbox defaultChecked color="warning" />
               <p className="text-xs text-[#848484]">
@@ -225,7 +336,7 @@ const InputContainer: React.FC<SetProps> = ({ isLogin, isForgot }) => {
               </p>
             </div>
           )}
-          {isLogin && (
+          {isLogin && !isUpdate && (
             <div
               className="w-[100%] flex justify-end text-[#FE5B24] cursor-pointer"
               onClick={() => navigate("/dashboard/forget")}
@@ -244,6 +355,8 @@ const InputContainer: React.FC<SetProps> = ({ isLogin, isForgot }) => {
               "Sign in"
             ) : isForgot ? (
               "Send"
+            ) : isUpdate ? (
+              "Update"
             ) : (
               "Sign up"
             )
@@ -258,7 +371,7 @@ const InputContainer: React.FC<SetProps> = ({ isLogin, isForgot }) => {
           )}
         </div>
 
-        {!isForgot && (
+        {!isForgot && !isUpdate && (
           <div
             className="w-[100%] h-[57px] bg-[white] rounded-[18px]  flex justify-center items-center text-[#00000080] font-[600] text-[21px] shadow-md border gap-2 cursor-pointer mt-3"
             onClick={() => login()}
@@ -268,7 +381,7 @@ const InputContainer: React.FC<SetProps> = ({ isLogin, isForgot }) => {
           </div>
         )}
       </div>
-      {!isForgot && (
+      {!isForgot && !isUpdate && (
         <div className="w-[100%] flex justify-center items-center absolute bottom-3 text-[18px] font-[600] text-[#9FA598]">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
           <span

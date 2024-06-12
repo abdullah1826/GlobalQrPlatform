@@ -9,6 +9,7 @@ import "./App.css";
 // import History from "./Pages/History";
 import Loading from "./components/Loading";
 import ForgetPassword from "./Pages/ForgetPassword";
+import UpdatePassword from "./Pages/UpdatePassword";
 
 let Home = lazy(() => import("./Pages/Home"));
 let Analytics = lazy(() => import("./Pages/Analytics"));
@@ -76,6 +77,7 @@ function App() {
               </Route>
               <Route path="signin" element={<Login />} />
               <Route path="forget" element={<ForgetPassword />} />
+              <Route path="updatePassword/:id" element={<UpdatePassword />} />
               <Route path="signup" element={<Signup />} />
             </Route>
             {/* <Route path="*" element={<Navigate to="/" />} /> */}
