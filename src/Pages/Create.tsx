@@ -15,7 +15,7 @@ import Custom from "../components/createComponents/Custom";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import axios from "axios";
-import ActionModal from "../components/Modals/ActionModal";
+// import ActionModal from "../components/Modals/ActionModal";
 import toast, { Toaster } from "react-hot-toast";
 
 const Create = () => {
@@ -199,11 +199,11 @@ const Create = () => {
     },
   }));
 
-  const [actionString, setActionString] = useState<string>("");
-  const [actionModal, setActionModal] = useState<boolean>(false);
-  const handlecloseAction = () => {
-    setActionModal(!actionModal);
-  };
+  // const [actionString, setActionString] = useState<string>("");
+  // const [actionModal, setActionModal] = useState<boolean>(false);
+  // const handlecloseAction = () => {
+  //   setActionModal(!actionModal);
+  // };
 
   const [quality, setquality] = useState<number>(100);
 
@@ -432,14 +432,14 @@ const Create = () => {
           Back
         </div>
       </div>
-      <ActionModal
+      {/* <ActionModal
         handlecloseAction={handlecloseAction}
         actionModal={actionModal}
         actionString={actionString}
         actionMethod={() => {
           handlecloseAction(), naviget("/dashboard");
         }}
-      />
+      /> */}
       <div className="w-[100%] h-[88%] flex justify-center items-center ">
         <div className="w-[95%] h-[88%]  flex justify-between">
           <div className="w-[25%] h-[100%] border-r flex justify-center items-center">
