@@ -44,6 +44,7 @@ const InputContainer: React.FC<SetProps> = ({
     setdata({ ...data, [key]: value });
   };
 
+  const [checked, setChecked] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   let baseUrl = import.meta.env.VITE_BASE_URL;
@@ -84,10 +85,21 @@ const InputContainer: React.FC<SetProps> = ({
         console.log("the response", res);
         if (res?.data?.status === true) {
           setLoading(false);
-          const securePromise = localStorage.setItem(
-            "gbQrId",
-            res?.data?.token
-          );
+          if (checked) {
+            localStorage.setItem("gqrSigned", "true");
+            var securePromise = localStorage.setItem(
+              "gbQrId",
+              res?.data?.token
+            );
+          } else {
+            localStorage.setItem("gqrSigned", "false");
+            var securePromise = localStorage.setItem(
+              "gbQrId",
+              res?.data?.token
+            );
+            sessionStorage.setItem("gbQrId", res?.data?.token);
+          }
+
           localStorage.setItem("gbEmail", data?.email);
           try {
             await Promise.resolve(securePromise);
@@ -224,6 +236,13 @@ const InputContainer: React.FC<SetProps> = ({
       fetchUserDataFromGoogle(tokenResponse?.access_token),
   });
   console.log("testing");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(event.target.checked);
+  };
+
+  console.log(checked);
+
   return (
     <div className="h-[100%] w-[50%]  flex justify-center items-center relative">
       <Toaster />
@@ -259,7 +278,7 @@ const InputContainer: React.FC<SetProps> = ({
               <h2 className="font-[500] text-[#9FA598] text-[20px]">Email</h2>
               <input
                 type="text"
-                className="w-[98%] pl-[2%] h-[55px] outline-none border border-[#D1D5DB] rounded-[18px]"
+                className="w-[100%] pl-[2%] h-[55px] outline-none border border-[#D1D5DB] rounded-[18px]"
                 onChange={(e) => getInput("email", e.target.value)}
                 value={data?.email}
               />
@@ -272,7 +291,7 @@ const InputContainer: React.FC<SetProps> = ({
                 {isUpdate && "New"} Password
               </h2>
 
-              <div className="w-[98%] h-[55px]  border border-[#D1D5DB] rounded-[18px] flex justify-center items-center relative">
+              <div className="w-[100%] h-[55px]  border border-[#D1D5DB] rounded-[18px] flex justify-center items-center relative">
                 {showPass ? (
                   <PiEyeClosedThin
                     className="absolute right-3 text-xl cursor-pointer"
@@ -287,7 +306,7 @@ const InputContainer: React.FC<SetProps> = ({
 
                 <input
                   type={showPass ? "text" : "password"}
-                  className="w-[99%] h-[98%] pl-[2%] outline-none rounded-[18px]"
+                  className="w-[100%] h-[98%] pl-[2%] outline-none rounded-[18px]"
                   onChange={(e) => getInput("password", e.target.value)}
                   value={data?.password}
                 />
@@ -340,11 +359,23 @@ const InputContainer: React.FC<SetProps> = ({
             </div>
           )}
           {isLogin && !isUpdate && (
-            <div
-              className="w-[100%] flex justify-end text-[#FE5B24] cursor-pointer"
-              onClick={() => navigate("/dashboard/forget")}
-            >
-              Forget Password?
+            <div className="w-[98%] flex justify-between text-[#FE5B24] cursor-pointer items-center">
+              <div className="flex items-center text-[15px]">
+                <Checkbox
+                  checked={checked}
+                  onChange={handleChange}
+                  inputProps={{ "aria-label": "controlled" }}
+                  color="warning"
+                  size="small"
+                />
+                Keep me signed in
+              </div>
+              <p
+                onClick={() => navigate("/dashboard/forget")}
+                className="text-[15px]"
+              >
+                Forget Password?
+              </p>
             </div>
           )}
         </div>

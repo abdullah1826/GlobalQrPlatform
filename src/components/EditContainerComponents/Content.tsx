@@ -23,6 +23,26 @@ const Content: React.FC<SetColorProps> = ({
   handleRoute,
 }) => {
   const navigation = useNavigate();
+  let theToken = localStorage.getItem("gbQrId");
+  let theSessionToken = sessionStorage.getItem("gbQrId");
+  let isSigned = localStorage.getItem("gqrSigned");
+  const handleSecureNavigation = () => {
+    if (isSigned === "true") {
+      if (theToken) {
+        navigation("/dashboard");
+      } else {
+        navigation("dashboard/signin");
+      }
+    } else if (isSigned === "false") {
+      if (theSessionToken) {
+        navigation("/dashboard");
+      } else {
+        navigation("dashboard/signin");
+      }
+    } else {
+      navigation("dashboard/signin");
+    }
+  };
   return (
     <div className="content-main">
       <div className="content-inner">
@@ -37,7 +57,7 @@ const Content: React.FC<SetColorProps> = ({
 
         <div
           className="toggle-section"
-          onClick={() => navigation("dashboard/signin")}
+          onClick={() => handleSecureNavigation()}
         >
           <Switch disabled />
           <p>Statics And Editability</p>

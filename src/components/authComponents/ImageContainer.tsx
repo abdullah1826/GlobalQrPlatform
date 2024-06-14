@@ -17,13 +17,14 @@ const ImageContainer: React.FC<SetProps> = ({ isLogin }) => {
       >
         <div className="w-[100%] h-[80%]  flex flex-col justify-between items-center">
           <div className="flex flex-col items-center">
-            <h2 className="font-[600] text-[28px] text-white text-center">
-              Global QR Codes
-            </h2>
-            <p className="font-[400] text-[20px] text-white text-center w-[82%]">
+            <h2 className="font-[600] text-[28px] text-white text-center w-[90%]">
               Create, manage, and track all your QR Codes for both print and
               digital media.
-            </p>
+            </h2>
+            {/* <p className="font-[400] text-[20px] text-white text-center w-[82%]">
+              Create, manage, and track all your QR Codes for both print and
+              digital media.
+            </p> */}
           </div>
 
           <img

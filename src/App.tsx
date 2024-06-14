@@ -22,8 +22,16 @@ interface RequireAuthProps {
 }
 function App() {
   let theToken = localStorage.getItem("gbQrId");
+  let theSessionToken = sessionStorage.getItem("gbQrId");
+  let isSigned = localStorage.getItem("gqrSigned");
   const RequireAuth: React.FC<RequireAuthProps> = ({ children }) => {
-    return theToken ? children : <Navigate to="/" />;
+    if (isSigned === "true") {
+      return theToken ? children : <Navigate to="/" />;
+    } else if (isSigned === "false") {
+      return theSessionToken ? children : <Navigate to="/" />;
+    } else {
+      return <Navigate to="/" />;
+    }
   };
   return (
     <>

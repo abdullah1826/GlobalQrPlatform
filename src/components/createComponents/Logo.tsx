@@ -70,7 +70,7 @@ const Logo: React.FC<SetLogoProps> = ({ editQrInfo, qrInfo, handleRoute }) => {
     editQrInfo(val, "logo");
   };
 
-  console.log(prflimg);
+  console.log(JSON.stringify({ image: prflimg }));
 
   return (
     <div className="w-[100%] h-[95%] flex flex-col items-center relative">

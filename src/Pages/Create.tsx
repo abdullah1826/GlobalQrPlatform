@@ -17,6 +17,9 @@ import jsPDF from "jspdf";
 import axios from "axios";
 // import ActionModal from "../components/Modals/ActionModal";
 import toast, { Toaster } from "react-hot-toast";
+import { storage } from "../firebase";
+import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { ClipLoader } from "react-spinners";
 
 const Create = () => {
   const naviget = useNavigate();
@@ -25,7 +28,7 @@ const Create = () => {
 
   const token = localStorage.getItem("gbQrId");
   let baseUrl = import.meta.env.VITE_BASE_URL;
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [qr, setqr] = useState<{
     _id: string;
     url: string;
@@ -62,7 +65,7 @@ const Create = () => {
     iColor: string;
     iColor2: string;
     bgColor: string;
-    logo: string | Blob;
+    logo: string;
     bShape: "squares" | "dots" | undefined;
     iShape: [number, number, number, number];
     fShape: [number, number, number, number];
@@ -349,70 +352,139 @@ const Create = () => {
       });
     }
   };
+  console.log(qrInfo.logo);
+
+  const returnIfHttps = (inputString: string | null | undefined): boolean => {
+    if (inputString && inputString !== "") {
+      if (
+        inputString.slice(0, 4) === "http" ||
+        inputString.slice(0, 4) === "/src" ||
+        inputString.slice(0, 7) === "/assets"
+      ) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return true;
+    }
+  };
 
   const createNewQr = async () => {
-    const apiFormData = new FormData();
-    apiFormData.append("qrId", id ? id : "");
-    apiFormData.append("name", qrInfo.name);
-    apiFormData.append("url", qrInfo.value);
-    apiFormData.append("forColor", qrInfo.forColor);
-    apiFormData.append("forColor2", qrInfo.forColor2);
-    apiFormData.append("iColor", qrInfo.iColor);
-    apiFormData.append("iColor2", qrInfo.iColor2);
-    apiFormData.append("bgColor", qrInfo.bgColor);
-    apiFormData.append("bodyShape", `${qrInfo.bShape}`);
-    apiFormData.append("eyeShape", `${qrInfo.iShape}`);
-    apiFormData.append("frameShape", `${qrInfo.fShape}`);
-    // apiFormData.append("logo", qrInfo.logo);
-    // if (qrInfo.logo) {
-    //   const base64data = qrInfo.logo?.replace(
-    //     /^data:image\/[a-z]+;base64,/,
-    //     ""
-    //   );
-    //   console.log(base64data);
-    //   const byteCharacters = atob(base64data);
-    //   const byteNumbers = new Array(byteCharacters.length);
-    //   for (let i = 0; i < byteCharacters.length; i++) {
-    //     byteNumbers[i] = byteCharacters.charCodeAt(i);
-    //   }
-    //   const byteArray = new Uint8Array(byteNumbers);
-    //   const blob = new Blob([byteArray], { type: "image/jpeg" });
-    //   console.log(blob);
-    //   const url = URL.createObjectURL(blob);
-    //   console.log(url);
-    //   apiFormData.append("logo", base64data);
-    // }
     try {
       if ((qrInfo?.value, qrInfo?.name)) {
-        const response = await axios.post(`${baseUrl}/qr/create`, apiFormData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        console.log(response);
-        toast.success(response?.data?.msg);
+        setLoading(true);
+        if (returnIfHttps(qrInfo.logo) === false) {
+          let name = new Date().getTime() + qrInfo?.name;
+          const storageRef = ref(storage, name);
+          uploadString(storageRef, qrInfo.logo?.slice(23), "base64", {
+            contentType: "image/png",
+          })
+            .then(() => {
+              console.log("img testing");
+              getDownloadURL(storageRef)
+                .then(async (URL) => {
+                  const apiFormDataImg = new FormData();
+                  apiFormDataImg.append("qrId", id ? id : "");
+                  apiFormDataImg.append("name", qrInfo.name);
+                  apiFormDataImg.append("url", qrInfo.value);
+                  apiFormDataImg.append("forColor", qrInfo.forColor);
+                  apiFormDataImg.append("forColor2", qrInfo.forColor2);
+                  apiFormDataImg.append("iColor", qrInfo.iColor);
+                  apiFormDataImg.append("iColor2", qrInfo.iColor2);
+                  apiFormDataImg.append("bgColor", qrInfo.bgColor);
+                  apiFormDataImg.append("bodyShape", `${qrInfo.bShape}`);
+                  apiFormDataImg.append("eyeShape", `${qrInfo.iShape}`);
+                  apiFormDataImg.append("frameShape", `${qrInfo.fShape}`);
+                  apiFormDataImg.append("logo", URL);
+                  const response = await axios.post(
+                    `${baseUrl}/qr/create`,
+                    apiFormDataImg,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  );
+                  setLoading(false);
+                  toast.success(response?.data?.msg);
+                  setQrInfo({
+                    name: "",
+                    value: "",
+                    forColor: "#707070",
+                    forColor2: "#000000",
+                    iColor: "#707070",
+                    iColor2: "#000000",
+                    bgColor: "#ffffff",
+                    logo: "",
+                    bShape: "squares",
+                    iShape: [0, 0, 0, 0],
+                    fShape: [0, 0, 0, 0],
+                  });
+                  handleRoute("content");
+                  naviget("/dashboard/history");
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+              // setimg(null)
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        } else {
+          const apiFormData = new FormData();
+          apiFormData.append("qrId", id ? id : "");
+          apiFormData.append("name", qrInfo.name);
+          apiFormData.append("url", qrInfo.value);
+          apiFormData.append("forColor", qrInfo.forColor);
+          apiFormData.append("forColor2", qrInfo.forColor2);
+          apiFormData.append("iColor", qrInfo.iColor);
+          apiFormData.append("iColor2", qrInfo.iColor2);
+          apiFormData.append("bgColor", qrInfo.bgColor);
+          apiFormData.append("bodyShape", `${qrInfo.bShape}`);
+          apiFormData.append("eyeShape", `${qrInfo.iShape}`);
+          apiFormData.append("frameShape", `${qrInfo.fShape}`);
+          apiFormData.append("logo", qrInfo.logo);
+          const response = await axios.post(
+            `${baseUrl}/qr/create`,
+            apiFormData,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setLoading(false);
+          console.log(response);
+          toast.success(response?.data?.msg);
+          setQrInfo({
+            name: "",
+            value: "",
+            forColor: "#707070",
+            forColor2: "#000000",
+            iColor: "#707070",
+            iColor2: "#000000",
+            bgColor: "#ffffff",
+            logo: "",
+            bShape: "squares",
+            iShape: [0, 0, 0, 0],
+            fShape: [0, 0, 0, 0],
+          });
+          handleRoute("content");
+          naviget("/dashboard/history");
+        }
+
         // setActionString(response?.data?.msg);
         // handlecloseAction();
-        setQrInfo({
-          name: "",
-          value: "",
-          forColor: "#707070",
-          forColor2: "#000000",
-          iColor: "#707070",
-          iColor2: "#000000",
-          bgColor: "#ffffff",
-          logo: "",
-          bShape: "squares",
-          iShape: [0, 0, 0, 0],
-          fShape: [0, 0, 0, 0],
-        });
-        handleRoute("content");
       } else {
         toast.error("Url field or name should not be empty!");
+        setLoading(false);
         // setActionString("Url field or name should not be empty!");
         // handlecloseAction();
       }
     } catch (error) {
+      setLoading(false);
       console.error("Error posting data:", error);
     }
   };
@@ -558,28 +630,29 @@ const Create = () => {
               ]}
               size={200}
             />
-            <div className="w-[100%] flex flex-col items-center ">
-              <IOSSlider
-                aria-label="ios slider"
-                defaultValue={60}
-                value={quality}
-                onChange={handleChangeSlider}
-                sx={{ width: "90%" }}
-                // valueLabelDisplay="on"
-              />
-              <div className="w-[90%] flex justify-between items-center">
-                <p className="font-[600] text-[10px] text-[#C0C0C0]">
-                  Low Quality
-                </p>
-                <p className="font-[600] text-[14px] text-[#C0C0C0]">
-                  {quality * 16}x{quality * 16}px
-                </p>
-                <p className="font-[600] text-[10px] text-[#C0C0C0]">
-                  High Quality
-                </p>
+            {id && (
+              <div className="w-[100%] flex flex-col items-center ">
+                <IOSSlider
+                  aria-label="ios slider"
+                  defaultValue={60}
+                  value={quality}
+                  onChange={handleChangeSlider}
+                  sx={{ width: "90%" }}
+                  // valueLabelDisplay="on"
+                />
+                <div className="w-[90%] flex justify-between items-center">
+                  <p className="font-[600] text-[10px] text-[#C0C0C0]">
+                    Low Quality
+                  </p>
+                  <p className="font-[600] text-[14px] text-[#C0C0C0]">
+                    {quality * 16}x{quality * 16}px
+                  </p>
+                  <p className="font-[600] text-[10px] text-[#C0C0C0]">
+                    High Quality
+                  </p>
+                </div>
               </div>
-            </div>
-
+            )}
             {/* {navigate?.isCustom && ( */}
             <div className="w-[85%] h-[50px] rounded-[12px] flex border border-[#FE5B24]">
               {id ? (
@@ -587,14 +660,34 @@ const Create = () => {
                   className="h-[100%] w-[100%] flex justify-center items-center gap-2 cursor-pointer text-[#FE5B24] font-[500] text-[18px]"
                   onClick={() => createNewQr()}
                 >
-                  Update
+                  {loading ? (
+                    <ClipLoader
+                      color="#FE5B24"
+                      loading={true}
+                      size={45}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                  ) : (
+                    "Update"
+                  )}
                 </div>
               ) : (
                 <div
                   className="h-[100%] w-[100%] flex justify-center items-center gap-2 cursor-pointer text-[#FE5B24] font-[500] text-[18px]"
                   onClick={() => createNewQr()}
                 >
-                  Create
+                  {loading ? (
+                    <ClipLoader
+                      color="#FE5B24"
+                      loading={true}
+                      size={45}
+                      aria-label="Loading Spinner"
+                      data-testid="loader"
+                    />
+                  ) : (
+                    "Create"
+                  )}
                 </div>
               )}
             </div>
