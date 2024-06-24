@@ -199,20 +199,6 @@ const Analytics = () => {
 
   const monthLabels = getLastDates(30);
   const weekLabels = getWeekDates();
-  const yearLabels = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
 
   const monthChartData = {
     labels: [monthLabels[0], monthLabels[10], monthLabels[20], monthLabels[29]],
