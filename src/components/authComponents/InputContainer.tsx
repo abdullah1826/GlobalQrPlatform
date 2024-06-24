@@ -209,6 +209,7 @@ const InputContainer: React.FC<SetProps> = ({
               res?.data?.token
             );
             localStorage.setItem("gbEmail", userInfoResponse?.data?.email);
+            localStorage.setItem("gqrSigned", "true");
             try {
               await Promise.resolve(securePromise);
 

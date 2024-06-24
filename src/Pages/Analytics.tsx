@@ -13,6 +13,10 @@ import axios from "axios";
 import { LineChart } from "@mui/x-charts/LineChart";
 import { Menu, MenuItem } from "@mui/material";
 
+import { Line } from "react-chartjs-2";
+import "chart.js/auto";
+import dayjs from "dayjs";
+
 interface qrType {
   name: string;
   url: string;
@@ -28,7 +32,37 @@ interface qrType {
   userId: string;
   _id: string;
 }
+
+interface ChartDataProps {
+  monthData: number[];
+  weekData: number[];
+  yearData: number[];
+}
+
+const getLastDates = (numDays: number): string[] => {
+  return Array.from({ length: numDays }, (_, i) =>
+    dayjs()
+      .subtract(numDays - i, "day")
+      .format("MMM D")
+  );
+};
+
+const getWeekDates = (): string[] => {
+  return Array.from({ length: 7 }, (_, i) =>
+    dayjs()
+      .subtract(7 - i, "day")
+      .format("MMM D")
+  );
+};
+
 const Analytics = () => {
+  const monthData = [
+    10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170,
+    180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300,
+  ];
+  const weekData = [5, 10, 15, 20, 25, 30, 35];
+  const yearData = [54, 40, 70, 80, 60, 90, 100, 110, 120, 130, 140, 150];
+
   const navigate = useNavigate();
   const [scanAnalytics, setScanAnalytics] = useState<number[]>([]);
   const [analytics, setAnalytics] = useState<{
@@ -168,6 +202,62 @@ const Analytics = () => {
       getScanAnalyticsData(statValue, analyticstype);
     }
   }, [statValue, analyticstype]);
+
+  const monthLabels = getLastDates(30);
+  const weekLabels = getWeekDates();
+  const yearLabels = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+
+  const monthChartData = {
+    labels: [monthLabels[0], monthLabels[10], monthLabels[20], monthLabels[29]],
+    datasets: [
+      {
+        label: "Monthly Data",
+        data: scanAnalytics,
+        fill: false,
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
+      },
+    ],
+  };
+
+  const weekChartData = {
+    labels: weekLabels,
+    datasets: [
+      {
+        label: "Weekly Data",
+        data: scanAnalytics,
+        fill: false,
+        backgroundColor: "rgba(153,102,255,0.2)",
+        borderColor: "rgba(153,102,255,1)",
+      },
+    ],
+  };
+
+  const yearChartData = {
+    labels: ["Jan", "Apr", "Jul", "Oct"],
+    datasets: [
+      {
+        label: "Yearly Data",
+        data: scanAnalytics,
+        fill: false,
+        backgroundColor: "rgba(255,159,64,0.2)",
+        borderColor: "rgba(255,159,64,1)",
+      },
+    ],
+  };
 
   return (
     <div className="w-[100%] h-[100vh] flex justify-between">
@@ -317,7 +407,7 @@ const Analytics = () => {
                   </>
                 </div>
 
-                {scanAnalytics?.length > 0 ? (
+                {/* {scanAnalytics?.length > 0 ? (
                   <LineChart
                     xAxis={[
                       {
@@ -345,7 +435,25 @@ const Analytics = () => {
                   />
                 ) : (
                   <div className="h-[300px] "></div>
-                )}
+                )} */}
+                <div
+                  className="w-[90%] 
+                h-[80%]  flex justify-center"
+                >
+                  {scanAnalytics?.length > 0 ? (
+                    <Line
+                      data={
+                        scanAnalytics?.length === 30
+                          ? monthChartData
+                          : scanAnalytics?.length === 12
+                          ? yearChartData
+                          : weekChartData
+                      }
+                    />
+                  ) : (
+                    <div className="h-[300px] "></div>
+                  )}
+                </div>
               </div>
             </div>
             <div className="w-[28%] h-[100%]  flex flex-col justify-between items-center">
