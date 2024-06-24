@@ -20,7 +20,54 @@ import toast, { Toaster } from "react-hot-toast";
 import { storage } from "../firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { ClipLoader } from "react-spinners";
-
+// import debounce from "lodash.debounce";
+const iOSBoxShadow =
+  "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)";
+const IOSSlider = styled(Slider)(({ theme }) => ({
+  color: theme.palette.mode === "dark" ? "#0a84ff" : "#FE5B24",
+  height: 5,
+  padding: "15px 0",
+  "& .MuiSlider-thumb": {
+    height: 20,
+    width: 20,
+    backgroundColor: "#FE5B24",
+    boxShadow: "0 0 2px 0px rgba(0, 0, 0, 0.1)",
+    "&:focus, &:hover, &.Mui-active": {
+      boxShadow: "0px 0px 3px 1px rgba(0, 0, 0, 0.1)",
+      // Reset on touch devices, it doesn't add specificity
+      "@media (hover: none)": {
+        boxShadow: iOSBoxShadow,
+      },
+    },
+    "&:before": {
+      boxShadow:
+        "0px 0px 1px 0px rgba(0,0,0,0.2), 0px 0px 0px 0px rgba(0,0,0,0.14), 0px 0px 1px 0px rgba(0,0,0,0.12)",
+    },
+  },
+  "& .MuiSlider-valueLabel": {
+    fontSize: 12,
+    fontWeight: "normal",
+    top: -6,
+    backgroundColor: "unset",
+    color: theme.palette.text.primary,
+    "&::before": {
+      display: "none",
+    },
+    "& *": {
+      background: "transparent",
+      color: theme.palette.mode === "dark" ? "#fff" : "#000",
+    },
+  },
+  "& .MuiSlider-track": {
+    border: "none",
+    height: 5,
+  },
+  "& .MuiSlider-rail": {
+    opacity: 0.5,
+    boxShadow: "inset 0px 0px 4px -2px #000",
+    backgroundColor: "#d0d0d0",
+  },
+}));
 const Create = () => {
   const naviget = useNavigate();
   let { id } = useParams();
@@ -154,66 +201,20 @@ const Create = () => {
 
   console.log(qr);
 
-  const iOSBoxShadow =
-    "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)";
-  const IOSSlider = styled(Slider)(({ theme }) => ({
-    color: theme.palette.mode === "dark" ? "#0a84ff" : "#FE5B24",
-    height: 5,
-    padding: "15px 0",
-    "& .MuiSlider-thumb": {
-      height: 20,
-      width: 20,
-      backgroundColor: "#FE5B24",
-      boxShadow: "0 0 2px 0px rgba(0, 0, 0, 0.1)",
-      "&:focus, &:hover, &.Mui-active": {
-        boxShadow: "0px 0px 3px 1px rgba(0, 0, 0, 0.1)",
-        // Reset on touch devices, it doesn't add specificity
-        "@media (hover: none)": {
-          boxShadow: iOSBoxShadow,
-        },
-      },
-      "&:before": {
-        boxShadow:
-          "0px 0px 1px 0px rgba(0,0,0,0.2), 0px 0px 0px 0px rgba(0,0,0,0.14), 0px 0px 1px 0px rgba(0,0,0,0.12)",
-      },
-    },
-    "& .MuiSlider-valueLabel": {
-      fontSize: 12,
-      fontWeight: "normal",
-      top: -6,
-      backgroundColor: "unset",
-      color: theme.palette.text.primary,
-      "&::before": {
-        display: "none",
-      },
-      "& *": {
-        background: "transparent",
-        color: theme.palette.mode === "dark" ? "#fff" : "#000",
-      },
-    },
-    "& .MuiSlider-track": {
-      border: "none",
-      height: 5,
-    },
-    "& .MuiSlider-rail": {
-      opacity: 0.5,
-      boxShadow: "inset 0px 0px 4px -2px #000",
-      backgroundColor: "#d0d0d0",
-    },
-  }));
-
-  // const [actionString, setActionString] = useState<string>("");
-  // const [actionModal, setActionModal] = useState<boolean>(false);
-  // const handlecloseAction = () => {
-  //   setActionModal(!actionModal);
-  // };
-
-  const [quality, setquality] = useState<number>(100);
+  const [quality, setquality] = useState<number>(0);
 
   const handleChangeSlider = (event: Event, newValue: number | number[]) => {
     setquality(newValue as number);
     console.log(event);
   };
+
+  // const handleChangeSlider = useCallback(
+  //   debounce((event: Event, newValue: number | number[]) => {
+  //     setquality(newValue as number);
+  //     console.log(event);
+  //   }, 100),
+  //   []
+  // );
 
   // const swapForColors = () => {
   //   setQrInfo((prevQrInfo) => ({
@@ -247,16 +248,6 @@ const Create = () => {
     width: number,
     height: number
   ) => {
-    await axios.post(
-      `${baseUrl}/analytics/update`,
-      { type: "download", qrId: id },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
     const qrCodeElement = document.getElementById("qrCodeContainer");
 
     if (!qrCodeElement) {
@@ -298,6 +289,16 @@ const Create = () => {
         downloadLink.click();
       });
     }
+
+    await axios.post(
+      `${baseUrl}/analytics/update`,
+      { type: "download", qrId: id },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
   };
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -377,7 +378,7 @@ const Create = () => {
         if (returnIfHttps(qrInfo.logo) === false) {
           let name = new Date().getTime() + qrInfo?.name;
           const storageRef = ref(storage, name);
-          uploadString(storageRef, qrInfo.logo?.slice(23), "base64", {
+          uploadString(storageRef, qrInfo.logo?.slice(22), "base64", {
             contentType: "image/png",
           })
             .then(() => {
@@ -600,7 +601,16 @@ const Create = () => {
             )}
           </div>
 
-          <div className="w-[22%] h-[100%] border-l flex flex-col justify-around items-center relative overflow-hidden">
+          <div className="w-[22%] h-[100%] border-l flex flex-col justify-around items-center relative overflow-hidden ">
+            {qrInfo?.logo && (
+              <div className="h-[80px] w-[80px] left-[35%] absolute overflow-hidden flex justify-center items-center top-[20%]">
+                <img
+                  src={qrInfo?.logo}
+                  alt=""
+                  className=" max-h-[90%] max-w-[90%]  object-fit object-center"
+                />
+              </div>
+            )}
             <QRCode
               // id="qrCodeContainer"
               value={qrInfo?.value}
@@ -608,9 +618,11 @@ const Create = () => {
               bgColor={qrInfo?.bgColor}
               eyeColor={qrInfo?.iColor}
               qrStyle={qrInfo?.bShape}
-              logoImage={
-                typeof qrInfo?.logo === "string" ? qrInfo?.logo : undefined
-              }
+              logoHeight={80}
+              logoWidth={80}
+              // logoImage={
+              //   typeof qrInfo?.logo === "string" ? qrInfo?.logo : undefined
+              // }
               eyeRadius={[
                 {
                   // top/left eye
@@ -628,7 +640,7 @@ const Create = () => {
                   inner: qrInfo?.iShape,
                 },
               ]}
-              size={200}
+              size={220}
             />
             {id && (
               <div className="w-[100%] flex flex-col items-center ">
@@ -638,7 +650,6 @@ const Create = () => {
                   value={quality}
                   onChange={handleChangeSlider}
                   sx={{ width: "90%" }}
-                  // valueLabelDisplay="on"
                 />
                 <div className="w-[90%] flex justify-between items-center">
                   <p className="font-[600] text-[10px] text-[#C0C0C0]">
@@ -761,36 +772,52 @@ const Create = () => {
                 alignItems: "center",
               }}
             >
-              <QRCode
+              <div
+                className="relative"
+                style={{ height: quality * 15, width: quality * 15 }}
                 id="qrCodeContainer"
-                value={qrInfo?.value}
-                size={quality * 15}
-                fgColor={qrInfo?.forColor}
-                bgColor={qrInfo?.bgColor}
-                eyeColor={qrInfo?.iColor}
-                qrStyle={qrInfo?.bShape}
-                // logoImage={qrInfo?.logo}
-                logoImage={
-                  typeof qrInfo?.logo === "string" ? qrInfo?.logo : undefined
-                }
-                eyeRadius={[
-                  {
-                    // top/left eye
-                    outer: qrInfo?.fShape,
-                    inner: qrInfo?.iShape,
-                  },
-                  {
-                    // top/left eye
-                    outer: qrInfo?.fShape,
-                    inner: qrInfo?.iShape,
-                  },
-                  {
-                    // top/left eye
-                    outer: qrInfo?.fShape,
-                    inner: qrInfo?.iShape,
-                  },
-                ]}
-              />
+              >
+                {qrInfo?.logo && (
+                  <div className="h-[37%] w-[37%] left-[32%] absolute overflow-hidden flex justify-center items-center top-[30%]">
+                    <img
+                      src={qrInfo?.logo}
+                      alt=""
+                      className=" max-h-[90%] max-w-[90%]  object-fit object-center"
+                    />
+                  </div>
+                )}
+
+                <QRCode
+                  value={qrInfo?.value}
+                  size={quality * 15}
+                  fgColor={qrInfo?.forColor}
+                  bgColor={qrInfo?.bgColor}
+                  eyeColor={qrInfo?.iColor}
+                  qrStyle={qrInfo?.bShape}
+                  // logoImage={qrInfo?.logo}
+
+                  // logoImage={
+                  //   typeof qrInfo?.logo === "string" ? qrInfo?.logo : undefined
+                  // }
+                  eyeRadius={[
+                    {
+                      // top/left eye
+                      outer: qrInfo?.fShape,
+                      inner: qrInfo?.iShape,
+                    },
+                    {
+                      // top/left eye
+                      outer: qrInfo?.fShape,
+                      inner: qrInfo?.iShape,
+                    },
+                    {
+                      // top/left eye
+                      outer: qrInfo?.fShape,
+                      inner: qrInfo?.iShape,
+                    },
+                  ]}
+                />
+              </div>
             </div>
           </div>
         </div>

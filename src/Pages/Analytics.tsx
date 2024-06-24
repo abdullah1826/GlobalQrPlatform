@@ -36,7 +36,7 @@ interface qrType {
 const getLastDates = (numDays: number): string[] => {
   return Array.from({ length: numDays }, (_, i) =>
     dayjs()
-      .subtract(numDays - i, "day")
+      .subtract(numDays - (i + 1), "day")
       .format("MMM D")
   );
 };
@@ -44,19 +44,12 @@ const getLastDates = (numDays: number): string[] => {
 const getWeekDates = (): string[] => {
   return Array.from({ length: 7 }, (_, i) =>
     dayjs()
-      .subtract(7 - i, "day")
+      .subtract(7 - (i + 1), "day")
       .format("MMM D")
   );
 };
 
 const Analytics = () => {
-  // const monthData = [
-  //   10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170,
-  //   180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300,
-  // ];
-  // const weekData = [5, 10, 15, 20, 25, 30, 35];
-  // const yearData = [54, 40, 70, 80, 60, 90, 100, 110, 120, 130, 140, 150];
-
   const navigate = useNavigate();
   const [scanAnalytics, setScanAnalytics] = useState<number[]>([]);
   const [analytics, setAnalytics] = useState<{
@@ -227,7 +220,7 @@ const Analytics = () => {
   };
 
   const yearChartData = {
-    labels: ["Jan", "Apr", "Jul", "Oct"],
+    labels: ["Jan", "Apr", "Jul", "Dec"],
     datasets: [
       {
         label: "Yearly Data",
@@ -417,8 +410,8 @@ const Analytics = () => {
                   <div className="h-[300px] "></div>
                 )} */}
                 <div
-                  className="w-[90%] 
-                h-[80%]  flex justify-center"
+                  className="w-[100%] 
+                h-[80%]  flex justify-center items-start  overflow-y-scroll"
                 >
                   {scanAnalytics?.length > 0 ? (
                     <Line
@@ -429,6 +422,7 @@ const Analytics = () => {
                           ? yearChartData
                           : weekChartData
                       }
+                      className="w-[80%]"
                     />
                   ) : (
                     <div className="h-[300px] "></div>

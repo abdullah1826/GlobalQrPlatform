@@ -13,6 +13,9 @@ import axios from "axios";
 import { LineChart } from "@mui/x-charts/LineChart";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { Line } from "react-chartjs-2";
+import "chart.js/auto";
+import dayjs from "dayjs";
 
 interface ActionProps {
   detailModal: boolean;
@@ -33,6 +36,22 @@ interface ActionProps {
     _id: string;
   };
 }
+
+const getLastDates = (numDays: number): string[] => {
+  return Array.from({ length: numDays }, (_, i) =>
+    dayjs()
+      .subtract(numDays - i, "day")
+      .format("MMM D")
+  );
+};
+
+const getWeekDates = (): string[] => {
+  return Array.from({ length: 7 }, (_, i) =>
+    dayjs()
+      .subtract(7 - i, "day")
+      .format("MMM D")
+  );
+};
 
 const DetailsModal: React.FC<ActionProps> = ({
   detailModal,
@@ -82,8 +101,6 @@ const DetailsModal: React.FC<ActionProps> = ({
       console.error("Error fetching data:", error);
     }
   };
-
-  console.log(scanAnalytics);
 
   const [anchorEl2, setAnchorEl2] = useState<null | HTMLElement>(null);
   const open2 = Boolean(anchorEl2);
@@ -211,6 +228,51 @@ const DetailsModal: React.FC<ActionProps> = ({
       console.error("Error fetching data:", error);
     }
   };
+
+  // -------------------------------------------------Line chart functionality----------------------------------------------
+
+  const monthLabels = getLastDates(30);
+  const weekLabels = getWeekDates();
+
+  const monthChartData = {
+    labels: [monthLabels[0], monthLabels[10], monthLabels[20], monthLabels[29]],
+    datasets: [
+      {
+        label: "Monthly Data",
+        data: scanAnalytics,
+        fill: false,
+        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(75,192,192,1)",
+      },
+    ],
+  };
+
+  const weekChartData = {
+    labels: weekLabels,
+    datasets: [
+      {
+        label: "Weekly Data",
+        data: scanAnalytics,
+        fill: false,
+        backgroundColor: "rgba(153,102,255,0.2)",
+        borderColor: "rgba(153,102,255,1)",
+      },
+    ],
+  };
+
+  const yearChartData = {
+    labels: ["Jan", "Apr", "Jul", "Oct"],
+    datasets: [
+      {
+        label: "Yearly Data",
+        data: scanAnalytics,
+        fill: false,
+        backgroundColor: "rgba(255,159,64,0.2)",
+        borderColor: "rgba(255,159,64,1)",
+      },
+    ],
+  };
+
   return (
     <Modal
       open={detailModal}
@@ -425,7 +487,7 @@ const DetailsModal: React.FC<ActionProps> = ({
             </>
           </div>
 
-          {scanAnalytics?.length > 0 ? (
+          {/* {scanAnalytics?.length > 0 ? (
             <LineChart
               xAxis={[
                 {
@@ -454,7 +516,26 @@ const DetailsModal: React.FC<ActionProps> = ({
             />
           ) : (
             <div className="h-[300px] "></div>
-          )}
+          )} */}
+
+          <div
+            className="w-[100%] 
+                h-[37%]  flex justify-center"
+          >
+            {scanAnalytics?.length > 0 ? (
+              <Line
+                data={
+                  scanAnalytics?.length === 30
+                    ? monthChartData
+                    : scanAnalytics?.length === 12
+                    ? yearChartData
+                    : weekChartData
+                }
+              />
+            ) : (
+              <div className="h-[300px] "></div>
+            )}
+          </div>
         </div>
       </Box>
     </Modal>

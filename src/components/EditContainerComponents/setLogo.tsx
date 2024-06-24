@@ -3,7 +3,7 @@ import upload from "../../imgs/upload.png";
 import { IoAddCircle } from "react-icons/io5";
 import { iconsData } from "../../assets/returnSocialIcons";
 // import { FileUploader } from "react-drag-drop-files";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, DragEvent, useState } from "react";
 import { Crop } from "react-image-crop";
 import Cropper from "../Cropper";
 interface SetColorProps {
@@ -60,8 +60,9 @@ const SetLogo: React.FC<SetColorProps> = ({
 
       reader.onload = () => {
         const base64String = reader.result as string;
-        setprflimg(base64String);
-        setcropModal(true);
+        getCropedLogo(base64String);
+        // setprflimg(base64String);
+        // setcropModal(true);
       };
 
       reader.onerror = (error) => {
@@ -74,6 +75,31 @@ const SetLogo: React.FC<SetColorProps> = ({
 
   let getCropedLogo = (val: string) => {
     editQrInfo(val, "logo");
+  };
+
+  const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setprflimg("");
+    const { files } = event.dataTransfer;
+
+    if (files && files.length > 0) {
+      const reader = new FileReader();
+      const selectedFile = files[0];
+
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        getCropedLogo(base64String);
+      };
+
+      reader.onerror = (error) => {
+        console.error("Error reading the file:", error);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
   };
 
   return (
@@ -106,7 +132,11 @@ const SetLogo: React.FC<SetColorProps> = ({
             types={fileTypes}
             disabled
           > */}
-          <div className="upload-section">
+          <div
+            className="upload-section"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+          >
             <img src={upload} alt="" />
             <h2>Drag and Drop your Image</h2>
             <p>or</p>

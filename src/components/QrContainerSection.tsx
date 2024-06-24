@@ -22,113 +22,59 @@ interface SetColorProps {
   };
 }
 
+const iOSBoxShadow =
+  "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)";
+
+const IOSSlider = styled(Slider)(({ theme }) => ({
+  color: theme.palette.mode === "dark" ? "#0a84ff" : "#FE5B24",
+  height: 5,
+  padding: "15px 0",
+  "& .MuiSlider-thumb": {
+    height: 20,
+    width: 20,
+    backgroundColor: "#FE5B24",
+    boxShadow: "0 0 2px 0px rgba(0, 0, 0, 0.1)",
+    "&:focus, &:hover, &.Mui-active": {
+      boxShadow: "0px 0px 3px 1px rgba(0, 0, 0, 0.1)",
+      // Reset on touch devices, it doesn't add specificity
+      "@media (hover: none)": {
+        boxShadow: iOSBoxShadow,
+      },
+    },
+    "&:before": {
+      boxShadow:
+        "0px 0px 1px 0px rgba(0,0,0,0.2), 0px 0px 0px 0px rgba(0,0,0,0.14), 0px 0px 1px 0px rgba(0,0,0,0.12)",
+    },
+  },
+  "& .MuiSlider-valueLabel": {
+    fontSize: 12,
+    fontWeight: "normal",
+    top: -6,
+    backgroundColor: "unset",
+    color: theme.palette.text.primary,
+    "&::before": {
+      display: "none",
+    },
+    "& *": {
+      background: "transparent",
+      color: theme.palette.mode === "dark" ? "#fff" : "#000",
+    },
+  },
+  "& .MuiSlider-track": {
+    border: "none",
+    height: 5,
+  },
+  "& .MuiSlider-rail": {
+    opacity: 0.5,
+    boxShadow: "inset 0px 0px 4px -2px #000",
+    backgroundColor: "#d0d0d0",
+  },
+}));
+
 const QrContainerSection: React.FC<SetColorProps> = ({ qrInfo }) => {
   console.log(qrInfo);
-  const iOSBoxShadow =
-    "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)";
 
-  const IOSSlider = styled(Slider)(({ theme }) => ({
-    color: theme.palette.mode === "dark" ? "#0a84ff" : "#FE5B24",
-    height: 5,
-    padding: "15px 0",
-    "& .MuiSlider-thumb": {
-      height: 20,
-      width: 20,
-      backgroundColor: "#FE5B24",
-      boxShadow: "0 0 2px 0px rgba(0, 0, 0, 0.1)",
-      "&:focus, &:hover, &.Mui-active": {
-        boxShadow: "0px 0px 3px 1px rgba(0, 0, 0, 0.1)",
-        // Reset on touch devices, it doesn't add specificity
-        "@media (hover: none)": {
-          boxShadow: iOSBoxShadow,
-        },
-      },
-      "&:before": {
-        boxShadow:
-          "0px 0px 1px 0px rgba(0,0,0,0.2), 0px 0px 0px 0px rgba(0,0,0,0.14), 0px 0px 1px 0px rgba(0,0,0,0.12)",
-      },
-    },
-    "& .MuiSlider-valueLabel": {
-      fontSize: 12,
-      fontWeight: "normal",
-      top: -6,
-      backgroundColor: "unset",
-      color: theme.palette.text.primary,
-      "&::before": {
-        display: "none",
-      },
-      "& *": {
-        background: "transparent",
-        color: theme.palette.mode === "dark" ? "#fff" : "#000",
-      },
-    },
-    "& .MuiSlider-track": {
-      border: "none",
-      height: 5,
-    },
-    "& .MuiSlider-rail": {
-      opacity: 0.5,
-      boxShadow: "inset 0px 0px 4px -2px #000",
-      backgroundColor: "#d0d0d0",
-    },
-  }));
   console.log(qrInfo?.fShape);
-
-  // const downloadQRCode = (format: "jpg" | "png" | "pdf") => {
-  //   const qrCodeElement = document.getElementById("qrCodeContainer");
-
-  //   if (!qrCodeElement) {
-  //     console.error("QR code container not found.");
-  //     return;
-  //   }
-
-  //   if (format === "pdf") {
-  //     html2canvas(qrCodeElement).then((canvas) => {
-  //       const imgData = canvas.toDataURL("image/png");
-  //       const pdf = new jsPDF("p", "mm", "a4");
-  //       const imgWidth = 210;
-  //       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  //       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-  //       pdf.save("QRCode.pdf");
-  //     });
-  //   } else {
-  //     html2canvas(qrCodeElement).then((canvas) => {
-  //       const imgData = canvas.toDataURL(`image/${format}`);
-  //       const downloadLink = document.createElement("a");
-  //       downloadLink.href = imgData;
-  //       downloadLink.download = `QRCode.${format}`;
-  //       downloadLink.click();
-  //     });
-  //   }
-  // };
-
-  // const downloadQRCode = (format: "jpg" | "png" | "pdf", quality: number) => {
-  //   const qrCodeElement = document.getElementById("qrCodeContainer");
-
-  //   if (!qrCodeElement) {
-  //     console.error("QR code container not found.");
-  //     return;
-  //   }
-
-  //   if (format === "pdf") {
-  //     html2canvas(qrCodeElement, { scale: quality / 100 }).then((canvas) => {
-  //       const imgData = canvas.toDataURL("image/png");
-  //       const pdf = new jsPDF("p", "mm", "a4");
-  //       const imgWidth = 210;
-  //       const imgHeight = (canvas.height * imgWidth) / canvas.width;
-  //       pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-  //       pdf.save("QRCode.pdf");
-  //     });
-  //   } else {
-  //     html2canvas(qrCodeElement, { scale: quality / 100 }).then((canvas) => {
-  //       const imgData = canvas.toDataURL(`image/${format}`, quality / 100);
-  //       const downloadLink = document.createElement("a");
-  //       downloadLink.href = imgData;
-  //       downloadLink.download = `QRCode.${format}`;
-  //       downloadLink.click();
-  //     });
-  //   }
-  // };
 
   const downloadQRCode = (
     format: "jpg" | "png" | "pdf",
@@ -199,35 +145,56 @@ const QrContainerSection: React.FC<SetColorProps> = ({ qrInfo }) => {
     console.log(event);
   };
 
+  // const handleChangeSlider = useCallback(
+  //   debounce((event: Event, newValue: number | number[]) => {
+  //     setquality(newValue as number);
+  //     console.log(event);
+  //   }, 100),
+  //   []
+  // );
+
   return (
     <div className="container-main">
-      <QRCode
-        // id="qrCodeContainer"
-        value={qrInfo?.value}
-        size={250}
-        fgColor={qrInfo?.forColor}
-        bgColor={qrInfo?.bgColor}
-        eyeColor={qrInfo?.iColor}
-        qrStyle={qrInfo?.bShape}
-        logoImage={qrInfo?.logo}
-        eyeRadius={[
-          {
-            // top/left eye
-            outer: qrInfo?.fShape,
-            inner: qrInfo?.iShape,
-          },
-          {
-            // top/left eye
-            outer: qrInfo?.fShape,
-            inner: qrInfo?.iShape,
-          },
-          {
-            // top/left eye
-            outer: qrInfo?.fShape,
-            inner: qrInfo?.iShape,
-          },
-        ]}
-      />
+      <div className="h-[250px] w-[250px] relative">
+        {qrInfo?.logo && (
+          <div className="h-[110px] w-[110px] left-[33%] absolute overflow-hidden flex justify-center items-center top-[32%]">
+            <img
+              src={qrInfo?.logo}
+              alt=""
+              className=" max-h-[90%] max-w-[90%]  object-fit object-center"
+            />
+          </div>
+        )}
+        <QRCode
+          // id="qrCodeContainer"
+          value={qrInfo?.value}
+          size={250}
+          fgColor={qrInfo?.forColor}
+          bgColor={qrInfo?.bgColor}
+          eyeColor={qrInfo?.iColor}
+          qrStyle={qrInfo?.bShape}
+          // logoImage={qrInfo?.logo}
+          // logoHeight={80}
+          // logoWidth={80}
+          eyeRadius={[
+            {
+              // top/left eye
+              outer: qrInfo?.fShape,
+              inner: qrInfo?.iShape,
+            },
+            {
+              // top/left eye
+              outer: qrInfo?.fShape,
+              inner: qrInfo?.iShape,
+            },
+            {
+              // top/left eye
+              outer: qrInfo?.fShape,
+              inner: qrInfo?.iShape,
+            },
+          ]}
+        />
+      </div>
 
       <div className="slider-main">
         <IOSSlider
@@ -304,7 +271,6 @@ const QrContainerSection: React.FC<SetColorProps> = ({ qrInfo }) => {
           </Menu>
         </div>
       </div>
-
       <div
         style={{
           position: "absolute",
@@ -314,33 +280,52 @@ const QrContainerSection: React.FC<SetColorProps> = ({ qrInfo }) => {
           alignItems: "center",
         }}
       >
-        <QRCode
+        <div
+          className="relative"
+          style={{ height: quality * 15, width: quality * 15 }}
           id="qrCodeContainer"
-          value={qrInfo?.value}
-          size={quality * 15}
-          fgColor={qrInfo?.forColor}
-          bgColor={qrInfo?.bgColor}
-          eyeColor={qrInfo?.iColor}
-          qrStyle={qrInfo?.bShape}
-          logoImage={qrInfo?.logo}
-          eyeRadius={[
-            {
-              // top/left eye
-              outer: qrInfo?.fShape,
-              inner: qrInfo?.iShape,
-            },
-            {
-              // top/left eye
-              outer: qrInfo?.fShape,
-              inner: qrInfo?.iShape,
-            },
-            {
-              // top/left eye
-              outer: qrInfo?.fShape,
-              inner: qrInfo?.iShape,
-            },
-          ]}
-        />
+        >
+          {qrInfo?.logo && (
+            <div className="h-[37%] w-[37%] left-[32%] absolute overflow-hidden flex justify-center items-center top-[30%]">
+              <img
+                src={qrInfo?.logo}
+                alt=""
+                className=" max-h-[90%] max-w-[90%]  object-fit object-center"
+              />
+            </div>
+          )}
+
+          <QRCode
+            value={qrInfo?.value}
+            size={quality * 15}
+            fgColor={qrInfo?.forColor}
+            bgColor={qrInfo?.bgColor}
+            eyeColor={qrInfo?.iColor}
+            qrStyle={qrInfo?.bShape}
+            // logoImage={qrInfo?.logo}
+
+            // logoImage={
+            //   typeof qrInfo?.logo === "string" ? qrInfo?.logo : undefined
+            // }
+            eyeRadius={[
+              {
+                // top/left eye
+                outer: qrInfo?.fShape,
+                inner: qrInfo?.iShape,
+              },
+              {
+                // top/left eye
+                outer: qrInfo?.fShape,
+                inner: qrInfo?.iShape,
+              },
+              {
+                // top/left eye
+                outer: qrInfo?.fShape,
+                inner: qrInfo?.iShape,
+              },
+            ]}
+          />
+        </div>
       </div>
     </div>
   );

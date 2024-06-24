@@ -43,8 +43,9 @@ const Logo: React.FC<SetLogoProps> = ({ editQrInfo, qrInfo, handleRoute }) => {
     setcropModal(false);
     // settheimg(null)
   };
-
+  const [imgIndex, setimgIndex] = useState<number>(0);
   const handleLogoImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setimgIndex(imgIndex + 1);
     setprflimg("");
     const { files } = event.target;
 
@@ -54,8 +55,9 @@ const Logo: React.FC<SetLogoProps> = ({ editQrInfo, qrInfo, handleRoute }) => {
       console.log(selectedFile);
       reader.onload = () => {
         const base64String = reader.result as string;
-        setprflimg(base64String);
-        setcropModal(true);
+        // setprflimg(base64String);
+        getCropedLogo(base64String);
+        // setcropModal(true);
       };
 
       reader.onerror = (error) => {
@@ -117,6 +119,7 @@ const Logo: React.FC<SetLogoProps> = ({ editQrInfo, qrInfo, handleRoute }) => {
                 onChange={handleLogoImageChange}
                 id="upload"
                 style={{ display: "none" }}
+                key={imgIndex}
               />
             </label>
           </div>
