@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { LineChart } from "@mui/x-charts/LineChart";
+// import { LineChart } from "@mui/x-charts/LineChart";
 import { Menu, MenuItem } from "@mui/material";
 
 import { Line } from "react-chartjs-2";
@@ -33,12 +33,6 @@ interface qrType {
   _id: string;
 }
 
-interface ChartDataProps {
-  monthData: number[];
-  weekData: number[];
-  yearData: number[];
-}
-
 const getLastDates = (numDays: number): string[] => {
   return Array.from({ length: numDays }, (_, i) =>
     dayjs()
@@ -56,12 +50,12 @@ const getWeekDates = (): string[] => {
 };
 
 const Analytics = () => {
-  const monthData = [
-    10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170,
-    180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300,
-  ];
-  const weekData = [5, 10, 15, 20, 25, 30, 35];
-  const yearData = [54, 40, 70, 80, 60, 90, 100, 110, 120, 130, 140, 150];
+  // const monthData = [
+  //   10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170,
+  //   180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290, 300,
+  // ];
+  // const weekData = [5, 10, 15, 20, 25, 30, 35];
+  // const yearData = [54, 40, 70, 80, 60, 90, 100, 110, 120, 130, 140, 150];
 
   const navigate = useNavigate();
   const [scanAnalytics, setScanAnalytics] = useState<number[]>([]);
