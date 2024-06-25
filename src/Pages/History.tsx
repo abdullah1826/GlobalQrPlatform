@@ -182,16 +182,6 @@ const History = () => {
     qrId: string
   ) => {
     try {
-      const response = await axios.post(
-        `${baseUrl}/analytics/update`,
-        { type: "download", qrId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
       const qrCodeElement = document.getElementById(qrId);
 
       if (!qrCodeElement) {
@@ -233,7 +223,15 @@ const History = () => {
           downloadLink.click();
         });
       }
-
+      const response = await axios.post(
+        `${baseUrl}/analytics/update`,
+        { type: "download", qrId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       // setStatValue("");
       console.log(response.data);
     } catch (error) {
@@ -432,34 +430,44 @@ const History = () => {
                     )}
                   </div>
                   {/* <Checkbox defaultChecked color="warning" size="large" /> */}
+                  <div className="relative h-[110px] w-[110px]" id={qr?._id}>
+                    {qr?.logo && (
+                      <div className="h-[50%] w-[50%] left-[32%] absolute overflow-hidden flex justify-center items-center top-[30%]">
+                        <img
+                          src={qr?.logo}
+                          alt=""
+                          className=" max-h-[90%] max-w-[90%]  object-fit object-center"
+                        />
+                      </div>
+                    )}
+                    <QRCode
+                      value={`${baseUrl}/qr/${qr?._id}`}
+                      fgColor={qr.forColor}
+                      bgColor={qr?.bgColor}
+                      eyeColor={qr?.eyeColor}
+                      qrStyle={qr?.bodyShape}
+                      // logoImage={qr?.logo}
+                      eyeRadius={[
+                        {
+                          // top/left eye
+                          outer: stringToArray(qr?.frameShape),
+                          inner: stringToArray(qr?.eyeShape),
+                        },
+                        {
+                          // top/left eye
+                          outer: stringToArray(qr?.frameShape),
+                          inner: stringToArray(qr?.eyeShape),
+                        },
+                        {
+                          // top/left eye
+                          outer: stringToArray(qr?.frameShape),
+                          inner: stringToArray(qr?.eyeShape),
+                        },
+                      ]}
+                      size={110}
+                    />
+                  </div>
 
-                  <QRCode
-                    id={qr?._id}
-                    value={`${baseUrl}/qr/${qr?._id}`}
-                    fgColor={qr.forColor}
-                    bgColor={qr?.bgColor}
-                    eyeColor={qr?.eyeColor}
-                    qrStyle={qr?.bodyShape}
-                    logoImage={qr?.logo}
-                    eyeRadius={[
-                      {
-                        // top/left eye
-                        outer: stringToArray(qr?.frameShape),
-                        inner: stringToArray(qr?.eyeShape),
-                      },
-                      {
-                        // top/left eye
-                        outer: stringToArray(qr?.frameShape),
-                        inner: stringToArray(qr?.eyeShape),
-                      },
-                      {
-                        // top/left eye
-                        outer: stringToArray(qr?.frameShape),
-                        inner: stringToArray(qr?.eyeShape),
-                      },
-                    ]}
-                    size={110}
-                  />
                   <div className="flex flex-col justify-between h-[70px]">
                     <p className="text-[#FE5B24] font-[400] text-[16px] ">
                       {qr?.name}
@@ -497,7 +505,7 @@ const History = () => {
                   <div className="w-[210px] h-[61px] rounded-[12px] flex bg-[#FE5B24]">
                     <div
                       className="h-[100%] w-[75%] border-r flex justify-center items-center gap-2 cursor-pointer text-[#FFFFFF] font-[500] text-[14px]"
-                      onClick={() => downloadQRCode(format, 200, 200, qr?._id)}
+                      onClick={() => downloadQRCode(format, 130, 130, qr?._id)}
                     >
                       <FiDownload className="text-xl" />
                       Download {format}{" "}

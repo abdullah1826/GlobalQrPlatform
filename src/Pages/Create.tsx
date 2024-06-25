@@ -492,6 +492,32 @@ const Create = () => {
 
   // let uniqueDate = Date;
   // console.log(uniqueDate.now());
+  const [logoSrc, setLogoSrc] = useState<string>("");
+  useEffect(() => {
+    const cnvrtTo64 = async () => {
+      if (qrInfo?.logo) {
+        const base64: string = await fetch(qrInfo.logo)
+          .then((response) => response.blob())
+          .then((blob) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            return new Promise<string>((res, rej) => {
+              reader.onloadend = () => {
+                if (typeof reader.result === "string") {
+                  res(reader.result);
+                } else {
+                  rej("Failed to convert to base64 string");
+                }
+              };
+            });
+          });
+        setLogoSrc(base64);
+      }
+    };
+    cnvrtTo64();
+  }, [qrInfo?.logo]);
+
+  console.log(logoSrc);
 
   return (
     <div className="h-[100vh] w-[100%]">
@@ -603,7 +629,10 @@ const Create = () => {
 
           <div className="w-[22%] h-[100%] border-l flex flex-col justify-around items-center relative overflow-hidden ">
             {qrInfo?.logo && (
-              <div className="h-[80px] w-[80px] left-[35%] absolute overflow-hidden flex justify-center items-center top-[20%]">
+              <div
+                className="h-[90px] w-[90px] left-[35%] absolute overflow-hidden flex justify-center items-center "
+                style={{ top: id ? "18%" : "25%" }}
+              >
                 <img
                   src={qrInfo?.logo}
                   alt=""
@@ -780,7 +809,7 @@ const Create = () => {
                 {qrInfo?.logo && (
                   <div className="h-[37%] w-[37%] left-[32%] absolute overflow-hidden flex justify-center items-center top-[30%]">
                     <img
-                      src={qrInfo?.logo}
+                      src={logoSrc}
                       alt=""
                       className=" max-h-[90%] max-w-[90%]  object-fit object-center"
                     />

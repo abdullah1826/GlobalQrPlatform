@@ -27,12 +27,7 @@ const SetLogo: React.FC<SetColorProps> = ({
   handleRoute,
   // qrInfo,
 }) => {
-  // const fileTypes = ["JPG", "PNG", "GIF"];
-  // let handleChange = (file: string) => {
-  //   editQrInfo(file, "logo");
-  // };
 
-  // const [prflimg, setprflimg] = useState<string | undefined>(undefined)
 
   let [prflimg, setprflimg] = useState<string | undefined>("");
   let [cropModal, setcropModal] = useState<boolean>(false);

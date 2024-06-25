@@ -379,36 +379,6 @@ const Analytics = () => {
                     </Menu>
                   </>
                 </div>
-
-                {/* {scanAnalytics?.length > 0 ? (
-                  <LineChart
-                    xAxis={[
-                      {
-                        data:
-                          scanAnalytics?.length === 12
-                            ? [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-                            : scanAnalytics?.length === 30
-                            ? [
-                                1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14,
-                                15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
-                                27, 28, 29, 30,
-                              ]
-                            : [1, 2, 3, 4, 5, 6, 7],
-                      },
-                    ]}
-                    series={[
-                      {
-                        data: scanAnalytics,
-                        area: true,
-                        color: "#FFCECE",
-                      },
-                    ]}
-                    width={750}
-                    height={330}
-                  />
-                ) : (
-                  <div className="h-[300px] "></div>
-                )} */}
                 <div
                   className="w-[100%] 
                 h-[80%]  flex justify-center items-start  overflow-y-scroll"

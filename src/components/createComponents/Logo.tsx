@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, DragEvent, useState } from "react";
 import { iconsData } from "../../assets/returnSocialIcons";
 import upload from "../../imgs/upload.png";
 import { IoIosAddCircle } from "react-icons/io";
@@ -72,7 +72,30 @@ const Logo: React.FC<SetLogoProps> = ({ editQrInfo, qrInfo, handleRoute }) => {
     editQrInfo(val, "logo");
   };
 
-  console.log(JSON.stringify({ image: prflimg }));
+  const handleDrop = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setprflimg("");
+    const { files } = event.dataTransfer;
+
+    if (files && files.length > 0) {
+      const reader = new FileReader();
+      const selectedFile = files[0];
+
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        getCropedLogo(base64String);
+      };
+
+      reader.onerror = (error) => {
+        console.error("Error reading the file:", error);
+      };
+      reader.readAsDataURL(selectedFile);
+    }
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+  };
 
   return (
     <div className="w-[100%] h-[95%] flex flex-col items-center relative">
@@ -102,7 +125,11 @@ const Logo: React.FC<SetLogoProps> = ({ editQrInfo, qrInfo, handleRoute }) => {
         </div>
 
         <div className="w-[100%] flex justify-between items-center mt-[30px]">
-          <div className="w-[35%] h-[182px] border-[1.5px] border-dashed border-[#FE5B24] rounded-[30px] flex flex-col gap-2 justify-center items-center">
+          <div
+            className="w-[35%] h-[182px] border-[1.5px] border-dashed border-[#FE5B24] rounded-[30px] flex flex-col gap-2 justify-center items-center"
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
+          >
             <img src={upload} alt="" className="h-[43px] w-[64px]" />
             <p className="font-[700px] text-[12px] text-[#FE5B24]">
               Drag and Drop your Image

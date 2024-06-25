@@ -10,7 +10,6 @@ import { TbUnlink } from "react-icons/tb";
 import { IoCopyOutline } from "react-icons/io5";
 import { FiDownload } from "react-icons/fi";
 import axios from "axios";
-import { LineChart } from "@mui/x-charts/LineChart";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { Line } from "react-chartjs-2";
@@ -58,7 +57,33 @@ const DetailsModal: React.FC<ActionProps> = ({
   handlecloseAction,
   singleQr,
 }) => {
-  console.log(singleQr?.frameShape);
+  // ---------------------------------------------------convert logo to base64-----------------------------------------------
+
+  const [logoSrc, setLogoSrc] = useState<string>("");
+  useEffect(() => {
+    const cnvrtTo64 = async () => {
+      if (singleQr?.logo) {
+        const base64: string = await fetch(singleQr.logo)
+          .then((response) => response.blob())
+          .then((blob) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(blob);
+            return new Promise<string>((res, rej) => {
+              reader.onloadend = () => {
+                if (typeof reader.result === "string") {
+                  res(reader.result);
+                } else {
+                  rej("Failed to convert to base64 string");
+                }
+              };
+            });
+          });
+        setLogoSrc(base64);
+      }
+    };
+    cnvrtTo64();
+  }, [singleQr?.logo]);
+
   const style2: React.CSSProperties = {
     position: "absolute",
     top: "50%",
@@ -170,16 +195,6 @@ const DetailsModal: React.FC<ActionProps> = ({
     qrId: string
   ) => {
     try {
-      const response = await axios.post(
-        `${baseUrl}/analytics/update`,
-        { type: "download", qrId },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
       const qrCodeElement = document.getElementById(qrId);
 
       if (!qrCodeElement) {
@@ -222,7 +237,15 @@ const DetailsModal: React.FC<ActionProps> = ({
         });
       }
 
-      // setStatValue("");
+      const response = await axios.post(
+        `${baseUrl}/analytics/update`,
+        { type: "download", qrId },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       console.log(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -273,6 +296,7 @@ const DetailsModal: React.FC<ActionProps> = ({
     ],
   };
 
+  console.log(logoSrc);
   return (
     <Modal
       open={detailModal}
@@ -293,33 +317,42 @@ const DetailsModal: React.FC<ActionProps> = ({
             <div className="w-[85%] flex justify-between ">
               <div className="w-[40%]">
                 {singleQr?.frameShape && singleQr?.eyeShape && (
-                  <QRCode
-                    id={singleQr?._id}
-                    value={`${baseUrl}/qr/${singleQr?._id}`}
-                    fgColor={singleQr.forColor}
-                    bgColor={singleQr?.bgColor}
-                    eyeColor={singleQr?.eyeColor}
-                    qrStyle={singleQr?.bodyShape}
-                    logoImage={singleQr?.logo}
-                    eyeRadius={[
-                      {
-                        // top/left eye
-                        outer: stringToArray(singleQr?.frameShape),
-                        inner: stringToArray(singleQr?.eyeShape),
-                      },
-                      {
-                        // top/left eye
-                        outer: stringToArray(singleQr?.frameShape),
-                        inner: stringToArray(singleQr?.eyeShape),
-                      },
-                      {
-                        // top/left eye
-                        outer: stringToArray(singleQr?.frameShape),
-                        inner: stringToArray(singleQr?.eyeShape),
-                      },
-                    ]}
-                    size={160}
-                  />
+                  <div className="relative h-[160px] w-[160px]">
+                    {logoSrc && (
+                      <div className="h-[60%] w-[60%] left-[29%] absolute overflow-hidden flex justify-center items-center top-[27%]">
+                        <img
+                          src={logoSrc}
+                          alt=""
+                          className=" max-h-[90%] max-w-[90%]  object-fit object-center"
+                        />
+                      </div>
+                    )}
+                    <QRCode
+                      value={`${baseUrl}/qr/${singleQr?._id}`}
+                      fgColor={singleQr.forColor}
+                      bgColor={singleQr?.bgColor}
+                      eyeColor={singleQr?.eyeColor}
+                      qrStyle={singleQr?.bodyShape}
+                      eyeRadius={[
+                        {
+                          // top/left eye
+                          outer: stringToArray(singleQr?.frameShape),
+                          inner: stringToArray(singleQr?.eyeShape),
+                        },
+                        {
+                          // top/left eye
+                          outer: stringToArray(singleQr?.frameShape),
+                          inner: stringToArray(singleQr?.eyeShape),
+                        },
+                        {
+                          // top/left eye
+                          outer: stringToArray(singleQr?.frameShape),
+                          inner: stringToArray(singleQr?.eyeShape),
+                        },
+                      ]}
+                      size={160}
+                    />
+                  </div>
                 )}
               </div>
               <div className="w-[55%]">
@@ -371,7 +404,7 @@ const DetailsModal: React.FC<ActionProps> = ({
                   <div
                     className="h-[100%] w-[75%] border-r flex justify-center items-center gap-2 cursor-pointer text-[#FFFFFF] font-[500] text-[14px]"
                     onClick={() =>
-                      downloadQRCode(format, 200, 200, singleQr?._id)
+                      downloadQRCode(format, 270, 270, singleQr?._id + "abc")
                     }
                   >
                     <FiDownload className="text-xl" />
@@ -534,6 +567,65 @@ const DetailsModal: React.FC<ActionProps> = ({
               />
             ) : (
               <div className="h-[300px] "></div>
+            )}
+          </div>
+
+          <div
+            style={{
+              position: "absolute",
+              bottom: "-2500px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {singleQr?.frameShape && singleQr?.eyeShape && (
+              <div
+                className="relative"
+                style={{ height: "250px", width: "250px" }}
+                id={singleQr?._id + "abc"}
+              >
+                {singleQr?.logo && (
+                  <div className="h-[37%] w-[37%] left-[35%] absolute overflow-hidden flex justify-center items-center top-[33%]">
+                    <img
+                      src={logoSrc}
+                      alt=""
+                      className=" max-h-[90%] max-w-[90%]  object-fit object-center"
+                    />
+                  </div>
+                )}
+
+                <QRCode
+                  value={singleQr?.url}
+                  size={250}
+                  fgColor={singleQr?.forColor}
+                  bgColor={singleQr?.bgColor}
+                  eyeColor={singleQr?.eyeColor}
+                  qrStyle={singleQr?.bodyShape}
+                  // logoImage={singleQr?.logo}
+
+                  // logoImage={
+                  //   typeof singleQr?.logo === "string" ? singleQr?.logo : undefined
+                  // }
+                  eyeRadius={[
+                    {
+                      // top/left eye
+                      outer: stringToArray(singleQr?.frameShape),
+                      inner: stringToArray(singleQr?.eyeShape),
+                    },
+                    {
+                      // top/left eye
+                      outer: stringToArray(singleQr?.frameShape),
+                      inner: stringToArray(singleQr?.eyeShape),
+                    },
+                    {
+                      // top/left eye
+                      outer: stringToArray(singleQr?.frameShape),
+                      inner: stringToArray(singleQr?.eyeShape),
+                    },
+                  ]}
+                />
+              </div>
             )}
           </div>
         </div>
