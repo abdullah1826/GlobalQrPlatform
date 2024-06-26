@@ -258,7 +258,39 @@ const DetailsModal: React.FC<ActionProps> = ({
   const weekLabels = getWeekDates();
 
   const monthChartData = {
-    labels: [monthLabels[0], monthLabels[10], monthLabels[20], monthLabels[29]],
+    labels: [
+      monthLabels[0],
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      monthLabels[10],
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      monthLabels[20],
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      monthLabels[29],
+    ],
     datasets: [
       {
         label: "Monthly Data",
@@ -284,7 +316,7 @@ const DetailsModal: React.FC<ActionProps> = ({
   };
 
   const yearChartData = {
-    labels: ["Jan", "Apr", "Jul", "Oct"],
+    labels: ["Jan", "", "", "Apr", "", "", "", "Jul", "", "", "", "", "Dec"],
     datasets: [
       {
         label: "Yearly Data",

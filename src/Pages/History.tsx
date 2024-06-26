@@ -495,7 +495,7 @@ const History = () => {
                         handlecloseAction(), setsingleQr(qr);
                       }}
                     >
-                      <p className="text-[#FE5B24] font-[400] text-[16px] ">
+                      <p className="text-[#FE5B24] font-[400] text-[16px]">
                         Details
                       </p>
                       <HiArrowNarrowRight className="text-[#FE5B24] mt-[2px]" />
@@ -533,7 +533,7 @@ const History = () => {
                     >
                       <MenuItem
                         onClick={() => {
-                          setFormat("png"), handleClose();
+                          setFormat("png"), handleClose2();
                         }}
                         sx={{ display: "flex" }}
                       >
@@ -541,7 +541,7 @@ const History = () => {
                       </MenuItem>
                       <MenuItem
                         onClick={() => {
-                          setFormat("jpg"), handleClose();
+                          setFormat("jpg"), handleClose2();
                         }}
                         sx={{ display: "flex" }}
                       >
@@ -549,7 +549,7 @@ const History = () => {
                       </MenuItem>
                       <MenuItem
                         onClick={() => {
-                          setFormat("pdf"), handleClose();
+                          setFormat("pdf"), handleClose2();
                         }}
                         sx={{ display: "flex" }}
                       >
@@ -582,7 +582,8 @@ const History = () => {
                   >
                     <div
                       onClick={() => {
-                        navigate(`/dashboard/create/${selectedQr}`);
+                        navigate(`/dashboard/create/${selectedQr}`),
+                          handleClose();
                         // handleGetValue("weakly");
                       }}
                     >
@@ -603,53 +604,6 @@ const History = () => {
                 </div>
               );
             })}
-
-            {/* <div className="w-[100%] h-[150px] border rounded-[19px] shadow-md flex justify-around items-center relative overflow-visible mt-8">
-              <div className="w-[90%] h-[60px]  absolute top-[-20px] z-20 flex justify-end">
-                <div className="h-[40px] w-[140px] border bg-white border-[#EE0000] rounded-[11px] flex cursor-pointer justify-center items-center gap-1 font-[600] text-[16px] text-[#EE0000]">
-                  <IoIosPause className="text-xl text-[#EE0000]" />
-                  Paused
-                </div>
-              </div>
-              <Checkbox defaultChecked color="warning" size="large" />
-              <QRCode
-                value="https://github.com/gcoro/react-qrcode-logo"
-                size={110}
-              />
-              <div className="flex gap-2 items-center ">
-                <TbUnlink className="text-[20px] text-[#9F9F9F] " />
-                <p className="font-[400] text-[14px] text-[#9F9F9F]">
-                  https://www.instagram.com/
-                </p>
-              </div>
-
-              <div className=" flex flex-col items-center justify-evenly h-[120px]">
-                <p className="font-[400] text-[13px] text-[#AFAFAF]">
-                  Total Scans
-                </p>
-                <h2 className="font-[700] text-[48px] ">12</h2>
-                <div className="flex items-center cursor-pointer">
-                  <p className="text-[#FE5B24] font-[400] text-[16px] ">
-                    Details
-                  </p>
-                  <HiArrowNarrowRight className="text-[#FE5B24] mt-[2px]" />
-                </div>
-              </div>
-
-              <div className="w-[210px] h-[61px] rounded-[12px] flex bg-[#FE5B24]">
-                <div className="h-[100%] w-[75%] border-r flex justify-center items-center gap-2 cursor-pointer text-[#FFFFFF] font-[500] text-[14px]">
-                  <FiDownload className="text-xl" />
-                  Download PNG
-                </div>
-                <div className="h-[100%] w-[25%] flex justify-center items-center ">
-                  <IoIosArrowDown className="text-2xl cursor-pointer text-white" />
-                </div>
-              </div>
-
-              <div className="h-[100%] flex justify-center items-center">
-                <BsThreeDotsVertical className="text-4xl cursor-pointer text-[#D9D9D9]" />
-              </div>
-            </div> */}
           </div>
         </div>
       </div>

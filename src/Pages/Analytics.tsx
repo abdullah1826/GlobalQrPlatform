@@ -2,7 +2,7 @@ import Sidebar from "../components/Sidebar";
 import { RiBarChartFill } from "react-icons/ri";
 import { IoAddCircleOutline } from "react-icons/io5";
 import { MdArrowDropDown, MdOutlineAutoGraph } from "react-icons/md";
-import { IoIosPause } from "react-icons/io";
+import { IoIosArrowDown, IoIosPause } from "react-icons/io";
 import { IoDownload } from "react-icons/io5";
 import { IoIosQrScanner } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
@@ -79,9 +79,24 @@ const Analytics = () => {
   const [qrs, setQrs] = useState<qrType[]>([]);
 
   const [analyticstype, setanalyticstype] = useState<string>("All");
+  const [qrName, setQrName] = useState<string>("All");
+  const getQrInfo = (name: string, id: string) => {
+    setanalyticstype(id);
+    setQrName(name);
+  };
 
   const token = localStorage.getItem("gbQrId");
   let baseUrl = import.meta.env.VITE_BASE_URL;
+
+  const [anchorEl3, setAnchorEl3] = useState<null | HTMLElement>(null);
+  const open3 = Boolean(anchorEl3);
+
+  const handleClickListItem3 = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl3(event.currentTarget);
+  };
+  const handleClose3 = () => {
+    setAnchorEl3(null);
+  };
 
   // ---------------------------------------------get api call-------------------------------------
 
@@ -180,6 +195,7 @@ const Analytics = () => {
 
     handleClose();
   };
+
   useEffect(() => {
     if (analyticstype === "All") {
       console.log("all");
@@ -194,7 +210,39 @@ const Analytics = () => {
   const weekLabels = getWeekDates();
 
   const monthChartData = {
-    labels: [monthLabels[0], monthLabels[10], monthLabels[20], monthLabels[29]],
+    labels: [
+      monthLabels[0],
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      monthLabels[10],
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      monthLabels[20],
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      monthLabels[29],
+    ],
     datasets: [
       {
         label: "Monthly Data",
@@ -220,7 +268,7 @@ const Analytics = () => {
   };
 
   const yearChartData = {
-    labels: ["Jan", "Apr", "Jul", "Dec"],
+    labels: ["Jan", "", "", "Apr", "", "", "", "Jul", "", "", "", "", "Dec"],
     datasets: [
       {
         label: "Yearly Data",
@@ -243,14 +291,10 @@ const Analytics = () => {
               <p className="font-[600] text-[24px] text-[#FE5B24]">Analytics</p>
             </div>
             <div className="flex justify-between w-[40%]">
-              <div
+              {/* <div
                 className="w-[185px] h-[53px] rounded-[12px] shadow-lg flex items-center justify-center gap-2 cursor-pointer"
-                // onClick={() => navigate("/create")}
+               
               >
-                {/* <IoAddCircleOutline className="text-[#FE5B24] text-[20px]" />
-                <p className="font-[400] text-[16px] text-[#FE5B24] flex items-center">
-                  Create QR Code
-                </p> */}
                 <select
                   className="w-[90%] h-[95%] outline-none text-[#FE5B24]"
                   onChange={(e) => setanalyticstype(e.target.value)}
@@ -261,7 +305,54 @@ const Analytics = () => {
                     return <option value={elm?._id}>{elm?.name}</option>;
                   })}
                 </select>
-              </div>
+              </div> */}
+
+              <button
+                className="w-[185px] h-[53px] rounded-[12px] shadow-lg flex items-center justify-evenly gap-2 cursor-pointer"
+                id="filter-button"
+                aria-haspopup="listbox"
+                aria-controls="filter-menu"
+                // aria-expanded={openMenu ? "true" : undefined}
+                onClick={handleClickListItem3}
+              >
+                <p className="font-[400] text-[16px] text-[#FE5B24] flex items-center w-[70%] ">
+                  {qrName}
+                </p>
+                <IoIosArrowDown className="text-[#FE5B24] text-[20px]" />
+              </button>
+              <Menu
+                id="filter-button"
+                anchorEl={anchorEl3}
+                open={open3}
+                onClose={handleClose3}
+                MenuListProps={{
+                  "aria-labelledby": "filter-button",
+                  role: "listbox",
+                }}
+              >
+                <MenuItem
+                  onClick={() => {
+                    getQrInfo("All", "All"), handleClose3();
+                  }}
+                  sx={{ display: "flex" }}
+                >
+                  All
+                </MenuItem>
+                {qrs?.map((elm) => {
+                  return (
+                    <>
+                      <MenuItem
+                        onClick={() => {
+                          getQrInfo(elm?.name, elm?._id), handleClose3();
+                        }}
+                        sx={{ display: "flex" }}
+                      >
+                        {elm?.name}
+                      </MenuItem>
+                    </>
+                  );
+                })}
+              </Menu>
 
               <div
                 className="w-[185px] h-[53px] rounded-[12px] shadow-lg flex items-center justify-center gap-2 cursor-pointer"

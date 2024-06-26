@@ -20,6 +20,7 @@ import toast, { Toaster } from "react-hot-toast";
 import { storage } from "../firebase";
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 import { ClipLoader } from "react-spinners";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 // import debounce from "lodash.debounce";
 const iOSBoxShadow =
   "0 3px 1px rgba(0,0,0,0.1),0 4px 8px rgba(0,0,0,0.13),0 0 0 1px rgba(0,0,0,0.02)";
@@ -517,7 +518,7 @@ const Create = () => {
     cnvrtTo64();
   }, [qrInfo?.logo]);
 
-  console.log(logoSrc);
+  // console.log(logoSrc);
 
   return (
     <div className="h-[100vh] w-[100%]">
@@ -673,6 +674,10 @@ const Create = () => {
             />
             {id && (
               <div className="w-[100%] flex flex-col items-center ">
+                <p className=" text-[13px] text-[#FE5B24] flex items-center gap-[2px]">
+                  <AiOutlineExclamationCircle className="text-[15px] text-[#FE5B24]" />
+                  QR quality is not saveable
+                </p>
                 <IOSSlider
                   aria-label="ios slider"
                   defaultValue={60}
